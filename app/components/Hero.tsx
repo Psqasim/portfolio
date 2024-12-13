@@ -17,7 +17,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2 }}
         >
-          Welcome to <span className="text-blue-500">Muhammad Qasim's</span> Portfolio
+          Welcome to <span className="text-blue-500">&apos;Muhammad Qasim&apos;s</span> Portfolio
         </motion.h1>
 
         <motion.p
