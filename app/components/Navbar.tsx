@@ -12,13 +12,13 @@ export default function Navbar() {
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "system";
     setTheme(savedTheme);
-    applyTheme(savedTheme);
+    applyTheme(savedTheme); // Apply saved theme on initial load
   }, []);
 
   const toggleTheme = (newTheme: string) => {
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    applyTheme(newTheme);
+    setTheme(newTheme); // Set the selected theme to state
+    localStorage.setItem("theme", newTheme); // Save theme to localStorage
+    applyTheme(newTheme); // Apply the selected theme
     setIsDropdownOpen(false); // Close dropdown after selection
   };
 
@@ -26,9 +26,9 @@ export default function Navbar() {
     const root = document.documentElement;
     if (theme === "system") {
       const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      root.classList.toggle("dark", prefersDark);
+      root.classList.toggle("dark", prefersDark); // Apply dark mode if system preference is dark
     } else {
-      root.classList.toggle("dark", theme === "dark");
+      root.classList.toggle("dark", theme === "dark"); // Apply dark mode if the theme is dark
     }
   };
 
