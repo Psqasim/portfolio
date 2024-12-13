@@ -12,14 +12,14 @@ export default function Navbar() {
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "system";
     setTheme(savedTheme);
-    applyTheme(savedTheme); // Apply saved theme on initial load
+    applyTheme(savedTheme); // Apply the saved theme when component mounts
   }, []);
 
   const toggleTheme = (newTheme: string) => {
-    setTheme(newTheme); // Set the selected theme to state
-    localStorage.setItem("theme", newTheme); // Save theme to localStorage
-    applyTheme(newTheme); // Apply the selected theme
-    setIsDropdownOpen(false); // Close dropdown after selection
+    setTheme(newTheme); // Update the theme state
+    localStorage.setItem("theme", newTheme); // Store theme preference in localStorage
+    applyTheme(newTheme); // Apply the new theme
+    setIsDropdownOpen(false); // Close the dropdown after selecting a theme
   };
 
   const applyTheme = (theme: string) => {
@@ -28,7 +28,7 @@ export default function Navbar() {
       const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
       root.classList.toggle("dark", prefersDark); // Apply dark mode if system preference is dark
     } else {
-      root.classList.toggle("dark", theme === "dark"); // Apply dark mode if the theme is dark
+      root.classList.toggle("dark", theme === "dark"); // Apply dark mode if the selected theme is dark
     }
   };
 
