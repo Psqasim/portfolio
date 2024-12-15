@@ -68,7 +68,7 @@ export function Contact() {
                   <Mail className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600 dark:text-purple-400" />
                 ),
                 title: "Email",
-                content: "muhammadqasim0326@gmail.com.com",
+                content: "muhammadqasim0326@gmail.com",
               },
               {
                 icon: (
