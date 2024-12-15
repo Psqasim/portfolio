@@ -1,118 +1,218 @@
-"use client"
+"use client";
 
-import Button from './Button';
-import Card from './Card';
-import Link from 'next/link';
-import { Github, Linkedin, Mail } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
+import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { useState } from "react";
 
 export function Contact() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const handleChange = (e: { target: { name: any; value: any } }) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    // Add your form submission logic here
+    console.log("Form submitted:", formData);
+  };
+
   return (
-    <section id="contact" className="py-16 px-4 bg-muted/50 dark:bg-muted/90 transition-colors duration-500">
-      <div className="container mx-auto max-w-4xl">
+    <section
+      id="contact"
+      className="py-12 sm:py-16 px-4 
+      bg-gradient-to-br from-blue-50 via-white to-blue-100 
+      dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 
+      transition-colors duration-500"
+    >
+      <div className="container mx-auto max-w-6xl px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-muted-foreground dark:text-white">
-            Get In Touch
+          <h2
+            className="text-2xl sm:text-4xl font-bold mb-4 
+          bg-clip-text text-transparent 
+          bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 
+          dark:from-indigo-400 dark:via-purple-300 dark:to-pink-400"
+          >
+            Contact Me
           </h2>
-          <p className="text-muted-foreground dark:text-muted-foreground max-w-2xl mx-auto">
-            Feel free to reach out for collaborations or just a friendly hello!
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4">
+            Have a project in mind? Let&apos;s connect and make something amazing
+            together!
           </p>
         </motion.div>
 
-        <div className="flex justify-center gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-12">
+          {/* Contact Information */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            whileHover={{ y: -5 }}
-            className="flex flex-col items-center gap-2"
+            className="space-y-4 sm:space-y-6"
           >
-            <Button
-              variant="primary"
-              size="sm"
-              className="h-16 w-16 p-4 hover:bg-gray-800 transition-all duration-300 border border-gray-800 dark:border-white bg-gray-800 dark:bg-gray-800"
-            >
-              <Github className="h-8 w-8 text-white dark:text-white" />
-            </Button>
-            <span className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">GitHub</span>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            whileHover={{ y: -5 }}
-            transition={{ delay: 0.1 }}
-            className="flex flex-col items-center gap-2"
-          >
-            <Button
-              variant="primary"
-              size="sm"
-              className="h-16 w-16 p-4 hover:bg-blue-700 transition-all duration-300 border border-blue-600 bg-blue-600 dark:bg-blue-600"
-            >
-              <Linkedin className="h-8 w-8 text-white dark:text-white" />
-            </Button>
-            <span className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">LinkedIn</span>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            whileHover={{ y: -5 }}
-            transition={{ delay: 0.2 }}
-            className="flex flex-col items-center gap-2"
-          >
-            <Link href="mailto:youremail@example.com">
-              <Button
-                variant="primary"
-                size="sm"
-                className="h-16 w-16 p-4 hover:bg-red-600 transition-all duration-300 border border-red-500 bg-red-500 dark:bg-red-500"
+            {[
+              {
+                icon: (
+                  <Mail className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600 dark:text-purple-400" />
+                ),
+                title: "Email",
+                content: "muhammadqasim0326@gmail.com.com",
+              },
+              {
+                icon: (
+                  <Phone className="h-6 w-6 sm:h-8 sm:w-8 text-emerald-600 dark:text-emerald-400" />
+                ),
+                title: "Phone",
+                content: "+92301-083222-7",
+              },
+              {
+                icon: (
+                  <MapPin className="h-6 w-6 sm:h-8 sm:w-8 text-red-600 dark:text-red-400" />
+                ),
+                title: "Location",
+                content: "Karachi, Pakistan",
+              },
+            ].map((contact, index) => (
+              <div
+                key={index}
+                className="flex items-center space-x-3 sm:space-x-4 
+                bg-white/70 dark:bg-gray-800/70 
+                backdrop-blur-lg 
+                rounded-xl sm:rounded-2xl 
+                shadow-md sm:shadow-xl 
+                border border-gray-100 dark:border-gray-700 
+                p-4 sm:p-6"
               >
-                <Mail className="h-8 w-8 text-white dark:text-white" />
-              </Button>
-            </Link>
-            <span className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Email</span>
+                {contact.icon}
+                <div>
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white">
+                    {contact.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                    {contact.content}
+                  </p>
+                </div>
+              </div>
+            ))}
           </motion.div>
-        </div>
 
-        <Card className="shadow-xl p-6 bg-white dark:bg-gray-800 rounded-lg">
-          <form className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Name</label>
+          {/* Contact Form */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+          >
+            <form
+              onSubmit={handleSubmit}
+              className="bg-white/70 dark:bg-gray-800/70 
+              backdrop-blur-lg 
+              rounded-xl sm:rounded-2xl 
+              shadow-md sm:shadow-xl 
+              border border-gray-100 dark:border-gray-700 
+              p-5 sm:p-8 space-y-4 sm:space-y-6"
+            >
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-xs sm:text-sm text-gray-700 dark:text-gray-300 mb-2"
+                >
+                  Name
+                </label>
                 <input
                   type="text"
-                  className="w-full px-4 py-2 rounded-lg border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary dark:bg-muted/80 dark:border-muted-foreground"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   required
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 
+                  text-xs sm:text-sm
+                  bg-gray-100 dark:bg-gray-700 
+                  border border-gray-200 dark:border-gray-600 
+                  rounded-lg sm:rounded-xl 
+                  focus:outline-none 
+                  focus:ring-2 focus:ring-purple-500"
+                  placeholder="Your name"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Email</label>
+
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-xs sm:text-sm text-gray-700 dark:text-gray-300 mb-2"
+                >
+                  Email
+                </label>
                 <input
                   type="email"
-                  className="w-full px-4 py-2 rounded-lg border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary dark:bg-muted/80 dark:border-muted-foreground"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   required
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 
+                  text-xs sm:text-sm
+                  bg-gray-100 dark:bg-gray-700 
+                  border border-gray-200 dark:border-gray-600 
+                  rounded-lg sm:rounded-xl 
+                  focus:outline-none 
+                  focus:ring-2 focus:ring-purple-500"
+                  placeholder="Your Email"
                 />
               </div>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Message</label>
-              <textarea
-                className="w-full px-4 py-2 rounded-lg border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary dark:bg-muted/80 dark:border-muted-foreground min-h-[150px]"
-                required
-              />
-            </div>
-            <Button size="lg" className="w-full bg-green-600 text-white hover:bg-green-700 transition-all duration-300">
-              Send Message
-            </Button>
-          </form>
-        </Card>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block text-xs sm:text-sm text-gray-700 dark:text-gray-300 mb-2"
+                >
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  rows={4}
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 
+                  text-xs sm:text-sm
+                  bg-gray-100 dark:bg-gray-700 
+                  border border-gray-200 dark:border-gray-600 
+                  rounded-lg sm:rounded-xl 
+                  focus:outline-none 
+                  focus:ring-2 focus:ring-purple-500"
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full flex items-center justify-center gap-2 
+                text-xs sm:text-sm
+                bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 
+                text-white font-semibold py-2 sm:py-3 rounded-lg sm:rounded-xl 
+                hover:from-indigo-700 hover:via-purple-600 hover:to-pink-600 
+                transition duration-300 
+                transform hover:scale-105"
+              >
+                <Send size={20} />
+                Send Message
+              </button>
+            </form>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -1,59 +1,82 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Download, MessageCircle } from "lucide-react";
 import Image from "next/image";
 
 export default function Hero() {
   return (
     <section
       id="home"
-      className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-blue-50 to-gray-300 dark:from-gray-800 dark:to-gray-900 py-10 px-6"
+      className="min-h-screen flex flex-col md:flex-row items-center justify-center 
+      bg-gradient-to-br from-blue-50 via-white to-blue-100 
+      dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 
+      py-10 px-6 relative overflow-hidden"
     >
+      {/* Subtle Background Shapes */}
+      <div className="absolute top-0 left-0 w-full h-full opacity-10 dark:opacity-20 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-200 dark:bg-blue-900 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-purple-200 dark:bg-purple-900 rounded-full blur-3xl"></div>
+      </div>
+
       {/* Left: Text Section */}
-      <div className="text-center md:text-left md:w-1/2 space-y-4">
+      <div className="text-center md:text-left md:w-1/2 space-y-6 z-10 relative">
         <motion.h1
           className="text-5xl font-bold text-gray-800 dark:text-white leading-tight"
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2 }}
+          transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 100 }}
         >
-          Welcome to <span className="text-blue-500">&apos;Muhammad Qasim&apos;s</span> Portfolio
+          Welcome to <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 dark:from-indigo-400 dark:via-purple-300 dark:to-pink-400">&apos;Muhammad Qasim&apos;s</span> Portfolio
         </motion.h1>
 
         <motion.p
-          className="text-lg text-gray-600 dark:text-gray-300"
+          className="text-lg text-gray-600 dark:text-gray-300 max-w-md mx-auto md:mx-0"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.4 }}
+          transition={{ duration: 0.8, delay: 0.4, type: "spring", stiffness: 100 }}
         >
           I am a passionate web developer specializing in creating stunning user experiences and robust applications.
         </motion.p>
 
         {/* Buttons Section */}
         <motion.div
-          className="flex justify-center md:justify-start space-x-4 mt-4"
+          className="flex justify-center md:justify-start space-x-4 mt-6"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={{ duration: 0.8, delay: 0.6, type: "spring", stiffness: 120 }}
         >
           <a
             href="#contact"
-            className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 dark:hover:bg-blue-700 transition duration-300"
+            className="flex items-center gap-2 px-6 py-3 
+            bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl shadow 
+            hover:from-blue-700 hover:to-purple-700 
+            transition duration-300 ease-in-out transform 
+            hover:-translate-y-1 hover:scale-105"
           >
+            <MessageCircle size={20} />
             Contact Me
           </a>
           <a
-            href="/Muhammad_Qasim_CV.pdf" // Replace with your CV file path
+            href="/Qasim Cv.pdf"
             download
-            className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-lg shadow hover:bg-gray-300 dark:hover:bg-gray-600 transition duration-300"
+            className="flex items-center gap-2 px-6 py-3 
+            bg-gray-100 dark:bg-gray-800 
+            text-gray-700 dark:text-gray-300 
+            font-semibold rounded-xl shadow 
+            hover:bg-gray-200 dark:hover:bg-gray-700 
+            transition duration-300 ease-in-out transform 
+            hover:-translate-y-1 hover:scale-105"
           >
+            <Download size={20} />
             Download CV
           </a>
         </motion.div>
       </div>
 
       {/* Right: Image Section */}
-      <div className="mt-8 md:mt-0 md:w-1/2 flex justify-center">
+       {/* Right: Image Section */}
+       <div className="mt-8 md:mt-0 md:w-1/2 flex justify-center">
         <motion.div
           className="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden shadow-lg border-4 border-blue-500"
           initial={{ opacity: 0, scale: 0.5 }}
@@ -61,7 +84,7 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.8 }}
         >
           <Image
-            src="/qas.jpg" // Replace with your image
+            src="/qas.jpg" 
             alt="Muhammad Qasim"
             layout="fill"
             objectFit="cover"
@@ -69,6 +92,7 @@ export default function Hero() {
           />
         </motion.div>
       </div>
+
     </section>
   );
 }

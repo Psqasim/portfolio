@@ -9,27 +9,27 @@ import { motion } from 'framer-motion';
 const projects = [
     {
       title: "Project 1",
-      description: "A full-stack web application built with Next.js and TypeScript.",
-      github: "https://github.com",
-      demo: "https://demo.com",
-      image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop",
+      description: "A full-stack web application built with Next.js,TypeScript and Tailwind Css.",
+      github: "https://github.com/Psqasim/hackathon-figma.git",
+      demo: "https://hackathon-figma-ecommmerce.vercel.app",
+      image: "/ecommrece.png",
       tags: ["Next.js", "TypeScript", "Tailwind CSS"]
     },
     {
       title: "Project 2",
-      description: "An e-commerce platform with real-time updates and cart functionality.",
-      github: "https://github.com",
-      demo: "https://demo.com",
-      image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&h=600&fit=crop",
-      tags: ["React", "Node.js", "MongoDB"]
+      description: "A simple and responsive car website built using HTML and CSS, showcasing sleek design and optimized for all devices.",
+      github: "https://github.com/Psqasim/supramk4-webiste.git",
+      demo: "https://supramk4-webiste.vercel.app",
+      image: "/car.png",
+      tags: ["HTML","CSS"]
     },
     {
       title: "Project 3",
-      description: "A responsive dashboard with data visualization and analytics.",
-      github: "https://github.com",
-      demo: "https://demo.com",
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop",
-      tags: ["Vue.js", "D3.js", "Firebase"]
+      description: "A responsive resume builder created with HTML and CSS, offering a seamless and modern user experience.",
+      github: "https://github.com/Psqasim/resume-builder.git",
+      demo: "https://resume-builder-lake-nine.vercel.app",
+      image: "/resume.png",
+      tags:  ["HTML","CSS"]
     }
   ];
   
