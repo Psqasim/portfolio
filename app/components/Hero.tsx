@@ -58,7 +58,7 @@ export default function Hero() {
             Contact Me
           </a>
           <a
-            href="/Qasim Cv.pdf"
+            href="/QasimCv.pdf"
             download
             className="flex items-center gap-2 px-6 py-3 
             bg-gray-100 dark:bg-gray-800 
