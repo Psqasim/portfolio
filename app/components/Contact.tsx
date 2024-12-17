@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Linkedin } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 export function Contact() {
@@ -84,6 +85,14 @@ export function Contact() {
                 title: "Location",
                 content: "Karachi, Pakistan",
               },
+              {
+                icon: (
+                  <Linkedin className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600 dark:text-blue-400" />
+                ),
+                title: "LinkedIn",
+                
+                Link: "Connect with Me on LinkedIn",
+              },
             ].map((contact, index) => (
               <div
                 key={index}
@@ -103,6 +112,12 @@ export function Contact() {
                   <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                     {contact.content}
                   </p>
+                  <Link href="https://www.linkedin.com/in/muhammad-qasim-5bba592b4/" className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >
+                   {contact.Link}
+                  </Link>
                 </div>
               </div>
             ))}
