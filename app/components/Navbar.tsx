@@ -57,7 +57,7 @@ export default function Navbar() {
           } md:flex md:space-x-8 text-lg absolute md:relative top-16 md:top-auto left-0 w-full md:w-auto bg-white dark:bg-gray-900 md:bg-transparent md:dark:bg-transparent shadow-md md:shadow-none z-20`}
         >
           <Link href="#home" className="block md:inline text-gray-700 dark:text-gray-300 hover:text-blue-500 px-4 py-2">
-            Home
+            Home 
           </Link>
           <Link href="#about" className="block md:inline text-gray-700 dark:text-gray-300 hover:text-blue-500 px-4 py-2">
             About

@@ -35,8 +35,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, type: "spring", stiffness: 100 }}
-        >
-          I am a passionate web developer specializing in creating stunning user experiences and robust applications.
+        >Passionate web designer skilled in front-end technologies (HTML,CSS,TypeScript and NextJs)
         </motion.p>
 
         {/* Buttons Section */}
