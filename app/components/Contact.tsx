@@ -24,6 +24,13 @@ export function Contact() {
     e.preventDefault();
     // Add your form submission logic here
     console.log("Form submitted:", formData);
+    
+    // Clear the form after submission
+    setFormData({
+      name: "",
+      email: "",
+      message: "",
+    });
   };
 
   return (
