@@ -27,7 +27,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 100 }}
         >
-          Welcome to <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 dark:from-indigo-400 dark:via-purple-300 dark:to-pink-400">&apos;Muhammad Qasim&apos;s</span> Portfolio
+          Welcome to <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 dark:from-indigo-400 dark:via-purple-300 dark:to-pink-400 animate-pulse">&apos;Muhammad Qasim&apos;s</span> Portfolio
         </motion.h1>
 
         <motion.p
@@ -75,7 +75,7 @@ export default function Hero() {
 
       {/* Right: Image Section */}
        {/* Right: Image Section */}
-       <div className="mt-8 md:mt-0 md:w-1/2 flex justify-center">
+       <div className=" mt-8 md:mt-0 md:w-1/2 flex justify-center">
         <motion.div
           className="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden shadow-lg border-4 border-blue-500"
           initial={{ opacity: 0, scale: 0.5 }}

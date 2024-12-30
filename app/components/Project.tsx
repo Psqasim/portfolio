@@ -25,17 +25,17 @@ const projects = [
     },
     {
       title: "Project 3",
-      description: "A responsive resume builder created with HTML and CSS, offering a seamless and modern user experience.",
-      github: "https://github.com/Psqasim/resume-builder.git",
-      demo: "https://resume-builder-lake-nine.vercel.app",
-      image: "/resume.png",
-      tags:  ["HTML","CSS"]
+      description:"Developed a dynamic blog website using Next.js, Tailwind CSS, and Sanity.io for seamless content management.",
+      github: "https://github.com/Psqasim/Blog-Website.git",
+      demo: "https://blog-website-psqasim.vercel.app",
+      image: "/blogwebsite.png",
+      tags:   ["Next.js", "TypeScript", "Tailwind CSS", "Sanity io"]
     }
   ];
   
   export function Projects() {
     return (
-      <section id="projects" className="py-16 px-4 bg-gradient-to-r from-blue-[10] to-gray-[140] dark:from-gray-600 dark:to-gray-900 transition-colors duration-500">
+      <section id="projects" className="py-16 px-4 bg-gradient-to-r from-blue-[10] to-gray-[140] dark:from-gray-600 bg-slate-100 dark:to-gray-900 transition-colors duration-500">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
