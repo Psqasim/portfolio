@@ -11,9 +11,9 @@ const projects = [
       title: "Project 1",
       description: "A full-stack web application built with Next.js,TypeScript and Tailwind Css.",
       github: "https://github.com/Psqasim/hackathon-figma.git",
-      demo: "https://hackathon-figma-ecommmerce.vercel.app",
+      demo: "https://hackathon-figma-ecommmerce-psqasim.vercel.app",
       image: "/ecommrece.png",
-      tags: ["Next.js", "TypeScript", "Tailwind CSS"]
+      tags: ["Next.js", "TypeScript", "Tailwind CSS","Sanity io,"]
     },
     {
       title: "Project 2",
