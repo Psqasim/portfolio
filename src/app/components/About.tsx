@@ -37,15 +37,7 @@ export function AboutMe() {
           </h2>
 
           <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-            "I am a creative and driven web designer with expertise in HTML,
-            CSS, JavaScript, TypeScript, and Tailwind CSS. My goal is to become
-            a skilled full-stack developer, with a particular interest in Web
-            3.0 and AI-driven robotics. I am dedicated to building
-            user-friendly, visually engaging designs and constantly exploring
-            innovative technologies to enhance the user experience. Fueled by my
-            commitment to continuous learning and growth, I aim to contribute
-            meaningfully to cutting-edge projects that push the boundaries of
-            web development and artificial intelligence.
+          "I’m a creative and motivated full-stack web developer with hands-on experience in HTML, CSS, Tailwind CSS, TypeScript, and Next.js. I’ve built dynamic, responsive web applications using powerful tools like Sanity.io, Stripe, and Clerk, and I’m currently integrating local payment gateways like JazzCash and EasyPaisa into e-commerce platforms. My passion lies at the intersection of Web 3.0 and AI-driven robotics, where I aim to build innovative digital solutions that are both impactful and user-centric. Constantly exploring new technologies and refining my skills, I strive to contribute to projects that challenge norms and push boundaries in the web development and AI space."
           </p>
 
           <div className="grid md:grid-cols-3 gap-4">
