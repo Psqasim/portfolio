@@ -40,7 +40,7 @@ const portableTextComponents: Partial<PortableTextReactComponents> = {
   marks: {},
   block: {
     // @ts-ignore - the type definitions are incorrect but this works
-    normal: ({ children }) => <p className="text-gray-600 dark:text-gray-400 mb-2 text-sm">{children}</p>,
+    normal: ({ children }) => <p className="text-gray-600 dark:text-gray-400 mb-2 text-sm sm:text-base">{children}</p>,
   },
 }
 
@@ -173,21 +173,21 @@ export function Projects() {
   }, [])
 
   return (
-    <section id="projects" className="py-16 px-4 bg-gray-50 dark:bg-gray-900 transition-colors duration-500">
-      <div className="container mx-auto">
+    <section id="projects" className="py-8 sm:py-12 md:py-16 px-4 bg-gray-50 dark:bg-gray-900 transition-colors duration-500">
+      <div className="container mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-800 dark:text-white">Featured Projects</h2>
-          <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 text-gray-800 dark:text-white">Featured Projects</h2>
+          <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 max-w-2xl mx-auto px-2">
             Here are some of my recent projects that showcase my skills and experience.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {projects.map((project, index) => {
             // Get the image URL
             const imageUrl = project.image?.asset?.url || `/placeholder.png?text=${encodeURIComponent(project.title)}`
@@ -205,60 +205,61 @@ export function Projects() {
                 className="h-full"
               >
                 <Card className="h-full flex flex-col overflow-hidden group bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
-                  <div className="relative h-48 sm:h-56 overflow-hidden">
+                  <div className="relative h-40 xs:h-44 sm:h-48 md:h-52 lg:h-56 overflow-hidden">
                     <Image
                       src={imageUrl || "/placeholder.png"}
                       alt={project.title}
                       fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                       className="object-cover transform group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent">
-                      <div className="absolute bottom-4 left-4 right-4 flex items-center justify-center gap-3">
+                      <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 right-2 sm:right-4 flex items-center justify-center gap-2 sm:gap-3">
                         {isPrivate ? (
-                          <Button size="sm" variant="secondary" className="flex-1 cursor-default opacity-90">
+                          <Button size="sm" variant="secondary" className="flex-1 cursor-default opacity-90 text-xs sm:text-sm">
                             <div className="flex items-center justify-center">
-                              <Lock className="mr-2 h-4 w-4" />
+                              <Lock className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                               Code
                             </div>
                           </Button>
                         ) : (
-                          <Button size="sm" variant="secondary" asChild className="flex-1">
+                          <Button size="sm" variant="secondary" asChild className="flex-1 text-xs sm:text-sm">
                             <a
                               href={project.github}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex items-center justify-center"
                             >
-                              <Github className="mr-2 h-4 w-4" />
+                              <Github className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                               Code
                             </a>
                           </Button>
                         )}
-                        <Button size="sm" variant="primary" asChild className="flex-1">
+                        <Button size="sm" variant="primary" asChild className="flex-1 text-xs sm:text-sm">
                           <a
                             href={project.demo}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center justify-center"
                           >
-                            <ExternalLink className="mr-2 h-4 w-4" />
+                            <ExternalLink className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                             Demo
                           </a>
                         </Button>
                       </div>
                     </div>
                   </div>
-                  <div className="p-6 flex-1 flex flex-col text-gray-900 dark:text-gray-100">
-                    <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                    <div className="mb-4 flex-1">
+                  <div className="p-3 sm:p-4 md:p-5 lg:p-6 flex-1 flex flex-col text-gray-900 dark:text-gray-100">
+                    <h3 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2">{project.title}</h3>
+                    <div className="mb-2 sm:mb-4 flex-1">
                       <PortableText value={project.description} components={portableTextComponents} />
                     </div>
-                    <div className="flex flex-wrap gap-2 mt-1">
+                    <div className="flex flex-wrap gap-1 sm:gap-2 mt-auto">
                       {project.tags &&
                         project.tags.map((tag, tagIndex) => (
                           <span
                             key={tagIndex}
-                            className="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-md text-xs font-medium dark:bg-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600"
+                            className="px-1.5 sm:px-2.5 py-0.5 sm:py-1 bg-gray-100 text-gray-700 rounded-md text-xs font-medium dark:bg-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600"
                           >
                             {tag}
                           </span>
