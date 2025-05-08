@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     images: ["/og-image.png"], // Same here
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/qasim.jpg",
   },
 }
 
