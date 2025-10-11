@@ -14,7 +14,10 @@ export function Footer() {
               Muhammad Qasim
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">
-              Full-stack Developer
+              Frontend Developer
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-500 transition-colors duration-300">
+              Building intelligent, scalable, and future‑ready web solutions.
             </p>
           </div>
 

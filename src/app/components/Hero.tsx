@@ -1,10 +1,46 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Download, MessageCircle } from "lucide-react"
+import { Download, MessageCircle, Briefcase } from "lucide-react"
 import Image from "next/image"
+import { useEffect, useState } from "react"
+import { createClient } from "next-sanity"
+
+type Profile = {
+  shortBio?: string
+  email?: string
+  github?: string
+  linkedin?: string
+}
+
+const client = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "",
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
+  apiVersion: "2023-05-03",
+  useCdn: true,
+})
 
 export default function Hero() {
+  const [profile, setProfile] = useState<Profile | null>(null)
+
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const data = await client.fetch<Profile>(`*[_type == "profile"][0]{shortBio, email, github, linkedin}`)
+        setProfile(data)
+      } catch {
+        setProfile(null)
+      }
+    }
+    fetchProfile()
+  }, [])
+
+  const shortBio =
+    profile?.shortBio ||
+    "Frontend Developer and Python Enthusiast exploring Agentic AI, the OpenAI SDK, and Web3. Building intelligent, scalable, and future‑ready web solutions with modern tech."
+
+  const emailHref = `mailto:${profile?.email || "muhammadqasim0326@gmail.com"}?subject=Hire%20Me%20-%20Muhammad%20Qasim`
+
   return (
     <section
       id="home"
@@ -27,11 +63,11 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 100 }}
         >
-          Welcome to{" "}
+          {"Welcome to "}
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 dark:from-indigo-400 dark:via-purple-300 dark:to-pink-400 animate-pulse">
-            &apos;Muhammad Qasim&apos;s
-          </span>{" "}
-          Portfolio
+            {"Muhammad Qasim's"}
+          </span>
+          {" Portfolio"}
         </motion.h1>
 
         <motion.p
@@ -40,12 +76,12 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, type: "spring", stiffness: 100 }}
         >
-          "Passionate full-stack web developer with hands-on experience in building dynamic and responsive websites using HTML, CSS, Tailwind CSS, TypeScript, Next.js, Sanity.io, Stripe, and Clerk."
+          {shortBio}
         </motion.p>
 
         {/* Buttons Section */}
         <motion.div
-          className="flex justify-center md:justify-start space-x-4 mt-6"
+          className="flex flex-wrap justify-center md:justify-start gap-4 mt-6"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.6, type: "spring", stiffness: 120 }}
@@ -59,8 +95,21 @@ export default function Hero() {
             hover:-translate-y-1 hover:scale-105"
           >
             <MessageCircle size={20} />
-            Contact Me
+            {"Contact Me"}
           </a>
+
+          <a
+            href={emailHref}
+            className="flex items-center gap-2 px-6 py-3 
+            bg-emerald-600 text-white font-semibold rounded-xl shadow-md
+            hover:bg-emerald-700 
+            transition duration-300 ease-in-out transform 
+            hover:-translate-y-1 hover:scale-105"
+          >
+            <Briefcase size={20} />
+            {"Hire Me"}
+          </a>
+
           <a
             href="/QasimCv.pdf"
             download
@@ -73,7 +122,7 @@ export default function Hero() {
             hover:-translate-y-1 hover:scale-105"
           >
             <Download size={20} />
-            Download CV
+            {"Download CV"}
           </a>
         </motion.div>
       </div>
@@ -86,7 +135,7 @@ export default function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
         >
-          <Image src="/qas.jpg" alt="Muhammad Qasim" layout="fill" objectFit="cover" priority />
+          <Image src="/qas.jpg" alt="Muhammad Qasim" fill className="object-cover" priority />
         </motion.div>
       </div>
     </section>

@@ -31,14 +31,14 @@ interface ProjectData {
     markDefs: never[]
     style: string
   }[]
-  github?: string // Make github optional
+  github?: string // optional to support private repos
   isPrivateRepo: boolean
   demo: string
   tags: string[]
   order: number
 }
 
-// Initial projects data - note that images need to be uploaded separately in Sanity Studio
+// Initial projects data
 const initialProjects: ProjectData[] = [
   {
     _type: "project",
@@ -47,10 +47,7 @@ const initialProjects: ProjectData[] = [
       {
         _type: "block",
         children: [
-          {
-            _type: "span",
-            text: "A full-stack web application built with Next.js, TypeScript and Tailwind CSS.",
-          },
+          { _type: "span", text: "A full-stack web application built with Next.js, TypeScript and Tailwind CSS." },
         ],
         markDefs: [],
         style: "normal",
@@ -61,7 +58,6 @@ const initialProjects: ProjectData[] = [
     demo: "https://hackathon-figma-ecommmerce-psqasim.vercel.app",
     tags: ["Next.js", "TypeScript", "Tailwind CSS", "Sanity io"],
     order: 1,
-    // Note: You'll need to upload the image separately in the Sanity Studio
   },
   {
     _type: "project",
@@ -79,12 +75,11 @@ const initialProjects: ProjectData[] = [
         style: "normal",
       },
     ],
-    github: "", // Empty string instead of undefined
+    github: "",
     isPrivateRepo: true,
     demo: "https://supramk4-webiste.vercel.app",
     tags: ["HTML", "CSS"],
     order: 2,
-    // Note: You'll need to upload the image separately in the Sanity Studio
   },
   {
     _type: "project",
@@ -102,12 +97,11 @@ const initialProjects: ProjectData[] = [
         style: "normal",
       },
     ],
-    github: "", // Empty string instead of undefined
+    github: "",
     isPrivateRepo: true,
     demo: "https://blog-website-psqasim.vercel.app",
     tags: ["Next.js", "TypeScript", "Tailwind CSS", "Sanity io"],
     order: 3,
-    // Note: You'll need to upload the image separately in the Sanity Studio
   },
 ]
 
@@ -115,16 +109,68 @@ const initialProjects: ProjectData[] = [
 export async function uploadInitialProjects() {
   try {
     console.log("Starting to upload initial projects...")
-
     for (const project of initialProjects) {
       console.log(`Creating project: ${project.title}`)
       await client.create(project)
     }
-
     console.log("All projects uploaded successfully!")
     return { success: true }
   } catch (error) {
     console.error("Error uploading projects:", error)
+    return { success: false, error }
+  }
+}
+
+// ---------- New: Profile and Skills seeding ----------
+
+const initialProfile = {
+  _id: "profileSingleton",
+  _type: "profile",
+  name: "Muhammad Qasim",
+  shortBio:
+    "Frontend Developer and Python Enthusiast exploring Agentic AI, the OpenAI SDK, and Web3. Building intelligent, scalable, and future‑ready web solutions with modern tech.",
+  about:
+    "I’m Muhammad Qasim, a Frontend Developer and Python enthusiast, passionate about Agentic AI, the OpenAI SDK, Prompt and Context Engineering, and Web3 technologies. I craft custom websites, e‑commerce platforms, and AI‑driven solutions tailored to client visions. Skilled in Next.js, Tailwind CSS, Sanity, Stripe, and Streamlit—and actively exploring autonomous AI workflows and decentralized applications—I aim to merge modern web development with cutting‑edge AI and Web3 innovations. Open to collaboration, learning, and creating impactful digital experiences.",
+  email: "muhammadqasim0326@gmail.com",
+  github: "https://github.com/Psqasim",
+  linkedin: "https://www.linkedin.com/in/muhammad-qasim-5bba592b4/",
+}
+
+const initialSkills = [
+  { _id: "skill-nextjs", _type: "skill", name: "Next.js", order: 1 },
+  { _id: "skill-typescript", _type: "skill", name: "TypeScript", order: 2 },
+  { _id: "skill-tailwind", _type: "skill", name: "Tailwind CSS", order: 3 },
+  { _id: "skill-html", _type: "skill", name: "HTML", order: 4 },
+  { _id: "skill-git", _type: "skill", name: "Git", order: 5 },
+  { _id: "skill-css", _type: "skill", name: "CSS", order: 6 },
+  // New requested skills
+  { _id: "skill-python", _type: "skill", name: "Python", order: 7 },
+  { _id: "skill-vercel", _type: "skill", name: "Vercel", order: 8 },
+  { _id: "skill-context-api", _type: "skill", name: "Context-API", order: 9 },
+  { _id: "skill-fastapi", _type: "skill", name: "FastAPI", order: 10 },
+  { _id: "skill-npm", _type: "skill", name: "NPM", order: 11 },
+  { _id: "skill-nodejs", _type: "skill", name: "NodeJs", order: 12 },
+  { _id: "skill-figma", _type: "skill", name: "Figma", order: 13 },
+  { _id: "skill-github", _type: "skill", name: "GitHub", order: 14 },
+  { _id: "skill-markdown", _type: "skill", name: "Markdown", order: 15 },
+]
+
+export async function uploadProfileAndSkills() {
+  try {
+    console.log("Seeding profile and skills...")
+    // Profile as singleton
+    // @ts-ignore - createIfNotExists exists on the Sanity client
+    await client.createIfNotExists(initialProfile)
+
+    // Upsert skills by fixed IDs
+    for (const s of initialSkills) {
+      // @ts-ignore
+      await client.createIfNotExists(s)
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error("Error seeding profile/skills:", error)
     return { success: false, error }
   }
 }
