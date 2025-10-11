@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Muhammad Qasim — Frontend Developer & Python Enthusiast",
+  title: "Muhammad Qasim — Frontend Developer",
   description:
     "I’m Muhammad Qasim, a Frontend Developer and Python enthusiast exploring Agentic AI, the OpenAI SDK, Prompt & Context Engineering, and Web3. I craft custom websites, e‑commerce platforms, and AI‑driven solutions with Next.js, Tailwind CSS, Sanity, Stripe, and Streamlit.",
   metadataBase: new URL("https://psqasim-portfolio.vercel.app"),
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     canonical: "https://psqasim-portfolio.vercel.app",
   },
   openGraph: {
-    title: "Muhammad Qasim — Frontend Developer & Python Enthusiast",
+    title: "Muhammad Qasim — Frontend Developer",
     description:
       "Portfolio of Muhammad Qasim. Building intelligent, scalable, future‑ready web solutions using Next.js, Tailwind CSS, Sanity, Stripe, Streamlit, and more.",
     url: "https://psqasim-portfolio.vercel.app",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Muhammad Qasim — Frontend Developer & Python Enthusiast",
+    title: "Muhammad Qasim — Frontend Developer",
     description:
       "Agentic AI, OpenAI SDK, Web3. Explore my projects built with Next.js, Tailwind CSS, Sanity, Stripe, and Streamlit.",
     images: ["/og-image.jpg"],
