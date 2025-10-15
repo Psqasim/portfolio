@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import Image from "next/image"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { createClient } from "next-sanity"
 import {
@@ -17,75 +18,119 @@ import {
   Server,
   Figma,
   Github,
+  Brain,
+  Loader2,
+  Star,
+  Filter,
 } from "lucide-react"
 
 type SkillDoc = {
   _id: string
   name: string
+  subtitle?: string
   level?: string
+  category?: string
   order?: number
+  imageUrl?: string
+  color?: string
+  featured?: boolean
+  proficiencyPercentage?: number
+  yearsOfExperience?: number
 }
 
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "",
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
   apiVersion: "2023-05-03",
-  useCdn: true,
+  useCdn: false,
 })
 
-// CONFIG: orb always orbits at low opacity; gets brighter on hover.
-// To switch to hover-only, set ALWAYS_ORBIT to false.
-const ALWAYS_ORBIT = true
-const ORB_BASE_OPACITY_LIGHT = 0.12
-const ORB_BASE_OPACITY_DARK = 0.1
-
-// Show these skills in this exact order
-const REQUIRED_SKILLS = ["Python", "Vercel", "Context-API", "FastAPI", "NPM", "NodeJs", "Figma", "GitHub", "Markdown"]
-
-// Fallbacks if Sanity is empty/missing entries
-const FALLBACK_SKILLS: SkillDoc[] = REQUIRED_SKILLS.map((name, i) => ({
-  _id: `fallback-${i}`,
-  name,
-  order: i + 1,
-}))
+function defaultSubtitle(name: string) {
+  const n = name.toLowerCase()
+  const map: Record<string, string> = {
+    "next.js": "React framework for production",
+    typescript: "Typed JavaScript for scale",
+    "tailwind css": "Utility‑first styling",
+    html: "Semantic markup foundation",
+    git: "Version control & collaboration",
+    css: "Responsive modern UI",
+    python: "Scripting, data and AI workflows",
+    vercel: "Fast deploys and edge hosting",
+    context_api: "Lightweight React state sharing",
+    fastapi: "High‑performance Python APIs",
+    npm: "Package management & scripts",
+    nodejs: "Server‑side JavaScript runtime",
+    figma: "Design & prototyping",
+    github: "Code hosting & workflows",
+    markdown: "Lightweight documentation",
+    open_ai_sdk: "Agentic AI & tool calling",
+    openai: "Agentic AI & tool calling",
+    web3: "Decentralized applications & blockchain",
+  }
+  return map[n] || "Modern, scalable development"
+}
 
 function iconFor(name: string) {
   const n = name.toLowerCase()
-  if (n === "python") return <Braces className="h-7 w-7 sm:h-8 sm:w-8 text-yellow-600 dark:text-yellow-400" />
-  if (n === "vercel") return <Rocket className="h-7 w-7 sm:h-8 sm:w-8 text-gray-900 dark:text-gray-200" />
-  if (n.includes("context")) return <Share2 className="h-7 w-7 sm:h-8 sm:w-8 text-cyan-600 dark:text-cyan-400" />
-  if (n === "fastapi") return <Zap className="h-7 w-7 sm:h-8 sm:w-8 text-green-600 dark:text-green-400" />
-  if (n === "npm") return <Package className="h-7 w-7 sm:h-8 sm:w-8 text-rose-600 dark:text-rose-400" />
-  if (n === "nodejs" || n === "node") return <Server className="h-7 w-7 sm:h-8 sm:w-8 text-lime-600 dark:text-lime-400" />
-  if (n === "figma") return <Figma className="h-7 w-7 sm:h-8 sm:w-8 text-pink-600 dark:text-pink-400" />
-  if (n === "github") return <Github className="h-7 w-7 sm:h-8 sm:w-8 text-gray-900 dark:text-gray-200" />
-  if (n === "markdown") return <FileCode2 className="h-7 w-7 sm:h-8 sm:w-8 text-slate-600 dark:text-slate-300" />
-
-  // Safe defaults if extended later
-  if (n.includes("tailwind")) return <Wind className="h-7 w-7 sm:h-8 sm:w-8 text-emerald-600 dark:text-emerald-400" />
-  if (n.includes("git")) return <GitBranch className="h-7 w-7 sm:h-8 sm:w-8 text-red-600 dark:text-red-400" />
-  if (n.includes("css")) return <Palette className="h-7 w-7 sm:h-8 sm:w-8 text-purple-600 dark:text-purple-400" />
-  return <Code2 className="h-7 w-7 sm:h-8 sm:w-8 text-indigo-600 dark:text-indigo-400" />
+  if (n.includes("open ai") || n.includes("openai")) return <Brain className="h-10 w-10 text-violet-500" />
+  if (n === "python") return <Braces className="h-10 w-10 text-yellow-600 dark:text-yellow-400" />
+  if (n === "vercel") return <Rocket className="h-10 w-10 text-gray-900 dark:text-gray-200" />
+  if (n.includes("context")) return <Share2 className="h-10 w-10 text-cyan-600 dark:text-cyan-400" />
+  if (n === "fastapi") return <Zap className="h-10 w-10 text-green-600 dark:text-green-400" />
+  if (n === "npm") return <Package className="h-10 w-10 text-rose-600 dark:text-rose-400" />
+  if (n === "nodejs" || n === "node") return <Server className="h-10 w-10 text-lime-600 dark:text-lime-400" />
+  if (n === "figma") return <Figma className="h-10 w-10 text-pink-600 dark:text-pink-400" />
+  if (n === "github") return <Github className="h-10 w-10 text-gray-900 dark:text-gray-200" />
+  if (n === "markdown") return <FileCode2 className="h-10 w-10 text-slate-600 dark:text-slate-300" />
+  if (n.includes("tailwind")) return <Wind className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
+  if (n.includes("git")) return <GitBranch className="h-10 w-10 text-red-600 dark:text-red-400" />
+  if (n.includes("css")) return <Palette className="h-10 w-10 text-purple-600 dark:text-purple-400" />
+  return <Code2 className="h-10 w-10 text-indigo-600 dark:text-indigo-400" />
 }
 
 function isDark(): boolean {
   if (typeof document === "undefined") return false
-  // next-themes toggles .dark on <html>
   return document.documentElement.classList.contains("dark")
 }
 
-function SkillCard({ name, level }: { name: string; level?: string }) {
+// Helper to lighten/darken hex colors for better visibility
+function adjustColor(hex: string, percent: number): string {
+  if (!hex || !hex.startsWith('#')) return hex
+  const num = parseInt(hex.slice(1), 16)
+  const amt = Math.round(2.55 * percent)
+  const R = Math.min(255, Math.max(0, (num >> 16) + amt))
+  const G = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amt))
+  const B = Math.min(255, Math.max(0, (num & 0x0000FF) + amt))
+  return `#${((1 << 24) | (R << 16) | (G << 8) | B).toString(16).slice(1)}`
+}
+
+function SkillCard({ 
+  name, 
+  subtitle, 
+  imageUrl, 
+  level,
+  featured,
+  proficiencyPercentage,
+  yearsOfExperience,
+  color
+}: { 
+  name: string
+  subtitle?: string
+  imageUrl?: string
+  level?: string
+  featured?: boolean
+  proficiencyPercentage?: number
+  yearsOfExperience?: number
+  color?: string
+}) {
   const cardRef = useRef<HTMLDivElement | null>(null)
   const surfaceRef = useRef<HTMLDivElement | null>(null)
   const rafRef = useRef<number | null>(null)
   const orbRAF = useRef<number | null>(null)
   const lastEventRef = useRef<{ x: number; y: number } | null>(null)
   const orbActiveRef = useRef(false)
-  const orbAngleRef = useRef(0) // degrees
-  const orbBaseOpacityRef = useRef(ALWAYS_ORBIT ? ORB_BASE_OPACITY_LIGHT : 0)
-  const observerRef = useRef<MutationObserver | null>(null)
+  const orbAngleRef = useRef(0)
 
-  // Cursor-driven tilt + shine
   const onMouseMove = (e: React.MouseEvent) => {
     const el = cardRef.current
     if (!el) return
@@ -98,11 +143,10 @@ function SkillCard({ name, level }: { name: string; level?: string }) {
       const { x, y } = lastEventRef.current
       const px = x / rect.width
       const py = y / rect.height
-      const rx = (-(py - 0.5) * 14).toFixed(2)
-      const ry = ((px - 0.5) * 14).toFixed(2)
-      const tx = ((px - 0.5) * 10).toFixed(2)
-      const ty = ((py - 0.5) * 10).toFixed(2)
-
+      const rx = (-(py - 0.5) * 10).toFixed(2)
+      const ry = ((px - 0.5) * 10).toFixed(2)
+      const tx = ((px - 0.5) * 6).toFixed(2)
+      const ty = ((py - 0.5) * 6).toFixed(2)
       el.style.setProperty("--rx", `${rx}deg`)
       el.style.setProperty("--ry", `${ry}deg`)
       el.style.setProperty("--tx", `${tx}px`)
@@ -116,15 +160,11 @@ function SkillCard({ name, level }: { name: string; level?: string }) {
     const el = cardRef.current
     if (!el || orbActiveRef.current) return
     orbActiveRef.current = true
-
-    // radius based on size
     const rect = el.getBoundingClientRect()
     const r = Math.max(rect.width, rect.height) * 0.55
     el.style.setProperty("--orb-r", `${r.toFixed(2)}px`)
-
     const step = () => {
       if (!orbActiveRef.current) return
-      // Calm orbit speed
       orbAngleRef.current = (orbAngleRef.current + 0.6) % 360
       el.style.setProperty("--orb-rot", `${orbAngleRef.current}deg`)
       orbRAF.current = requestAnimationFrame(step)
@@ -149,169 +189,241 @@ function SkillCard({ name, level }: { name: string; level?: string }) {
     el.style.setProperty("--shadow", isDark() ? "0.20" : "0.14")
     el.style.setProperty("--shine", "0")
     el.style.setProperty("--glow", "0")
-    el.style.setProperty("--orb-o", ALWAYS_ORBIT ? String(orbBaseOpacityRef.current) : "0")
+    el.style.setProperty("--orb-o", "0")
   }
 
-  // Update visuals when theme toggles
   const applyThemeVisuals = () => {
     const el = cardRef.current
     const surface = surfaceRef.current
     if (!el || !surface) return
-
-    // Adjust base orb opacity for theme
-    orbBaseOpacityRef.current = ALWAYS_ORBIT ? (isDark() ? ORB_BASE_OPACITY_DARK : ORB_BASE_OPACITY_LIGHT) : 0
-    el.style.setProperty("--orb-o", ALWAYS_ORBIT ? String(orbBaseOpacityRef.current) : "0")
-
-    // Light vs Dark background tweaks for the surface
     if (isDark()) {
       surface.style.background =
-        "linear-gradient(180deg, rgba(17,24,39,0.32), rgba(17,24,39,0.22) 22%), rgba(17,24,39,0.68)"
-      surface.style.borderColor = "rgba(55,65,81,0.6)" // gray-700/60
+        "linear-gradient(180deg, rgba(17,24,39,0.35), rgba(17,24,39,0.25) 20%), rgba(17,24,39,0.7)"
+      surface.style.borderColor = "rgba(55,65,81,0.65)"
     } else {
       surface.style.background =
-        "linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.88) 22%), rgba(255,255,255,0.92)"
-      surface.style.borderColor = "rgba(209,213,219,0.8)" // gray-300/80
+        "linear-gradient(180deg, rgba(255,255,255,0.15), rgba(255,255,255,0) 20%), rgba(255,255,255,0.82)"
+      surface.style.borderColor = "rgba(229,231,235,0.75)"
     }
   }
 
   const onMouseEnter = () => {
     const el = cardRef.current
     if (!el) return
-    el.style.setProperty("--s", "1.03")
-    el.style.setProperty("--shadow", "0.32")
-    el.style.setProperty("--shine", "0.7")
-    el.style.setProperty("--glow", "0.85")
+    el.style.setProperty("--s", featured ? "1.06" : "1.04")
+    el.style.setProperty("--shadow", "0.35")
+    el.style.setProperty("--shine", "0.75")
+    el.style.setProperty("--glow", "0.9")
     el.style.setProperty("--orb-o", "1")
     startOrb()
   }
-
+  
   const onMouseLeave = () => {
     applyBaseStyles()
-    if (!ALWAYS_ORBIT) stopOrb()
+    stopOrb()
   }
 
   useEffect(() => {
     applyBaseStyles()
     applyThemeVisuals()
-    if (ALWAYS_ORBIT) startOrb()
-
-    // Watch for theme changes (next-themes toggles the class on <html>)
     const html = document.documentElement
-    const observer = new MutationObserver(() => {
-      applyThemeVisuals()
-    })
-    observer.observe(html, { attributes: true, attributeFilter: ["class"] })
-    observerRef.current = observer
-
+    const obs = new MutationObserver(() => applyThemeVisuals())
+    obs.observe(html, { attributes: true, attributeFilter: ["class"] })
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
       if (orbRAF.current) cancelAnimationFrame(orbRAF.current)
-      observer.disconnect()
+      obs.disconnect()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const finalSubtitle = subtitle || defaultSubtitle(name)
+  const levelColors: Record<string, string> = {
+    beginner: "from-blue-500/20 to-cyan-500/20 text-blue-700 dark:text-blue-300 border-blue-300/30 dark:border-blue-500/30",
+    intermediate: "from-green-500/20 to-emerald-500/20 text-green-700 dark:text-green-300 border-green-300/30 dark:border-green-500/30",
+    advanced: "from-purple-500/20 to-indigo-500/20 text-purple-700 dark:text-purple-300 border-purple-300/30 dark:border-purple-500/30",
+    expert: "from-amber-500/20 to-orange-500/20 text-amber-700 dark:text-amber-300 border-amber-300/30 dark:border-amber-500/30",
+  }
+
+  // Convert hex to rgba for gradient use
+  const hexToRgba = (hex: string, alpha: number) => {
+    if (!hex || !hex.startsWith('#')) return `rgba(147,51,234,${alpha})`
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+    return result
+      ? `rgba(${parseInt(result[1], 16)},${parseInt(result[2], 16)},${parseInt(result[3], 16)},${alpha})`
+      : `rgba(147,51,234,${alpha})`
+  }
+
   return (
-    <div className="relative group" style={{ perspective: "1000px" }}>
-      {/* 3D frame with gradient border */}
+    <div className="relative group h-full" style={{ perspective: "1200px" }}>
+      {/* Featured badge */}
+      {featured && (
+        <div className="absolute -top-2 -right-2 z-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full p-2 shadow-lg">
+          <Star className="h-4 w-4 text-white fill-white" />
+        </div>
+      )}
+      
       <div
         ref={cardRef}
         onMouseMove={onMouseMove}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        className="relative rounded-2xl p-[1px] transition-transform duration-200 overflow-visible"
+        className="relative rounded-2xl p-[1px] transition-transform duration-200 overflow-visible h-full"
         style={{
           transform:
             "rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translate3d(var(--tx, 0), var(--ty, 0), 0) scale(var(--s, 1))",
           willChange: "transform",
-          background: "linear-gradient(135deg, rgba(79,70,229,0.18), rgba(147,51,234,0.18), rgba(236,72,153,0.18))",
-          boxShadow: "0 10px 20px rgba(0,0,0,var(--shadow,0.14)), 0 6px 6px rgba(0,0,0,var(--shadow,0.14))",
+          background: featured 
+            ? "linear-gradient(135deg, rgba(251,191,36,0.3), rgba(245,158,11,0.3), rgba(217,119,6,0.3))"
+            : color 
+              ? `linear-gradient(135deg, ${hexToRgba(color, 0.25)}, ${hexToRgba(adjustColor(color, -10), 0.2)}, ${hexToRgba(adjustColor(color, -20), 0.15)})`
+              : "linear-gradient(135deg, rgba(79,70,229,0.2), rgba(147,51,234,0.2), rgba(236,72,153,0.2))",
+          boxShadow: featured 
+            ? "0 12px 28px rgba(251,191,36,0.25), 0 8px 8px rgba(245,158,11,0.2)"
+            : "0 12px 24px rgba(0,0,0,var(--shadow,0.14)), 0 8px 8px rgba(0,0,0,var(--shadow,0.14))",
           transformStyle: "preserve-3d",
           borderRadius: "16px",
         }}
       >
-        {/* Animated border glow */}
+        {/* Glow effect */}
         <div
           className="pointer-events-none absolute inset-0 rounded-2xl transition-all duration-300"
           style={{
-            background:
-              "conic-gradient(from 180deg at 50% 50%, rgba(79,70,229,0.0), rgba(147,51,234,0.25), rgba(236,72,153,0.25), rgba(147,51,234,0.25), rgba(79,70,229,0.0))",
-            filter: "blur(10px)",
+            background: featured
+              ? "conic-gradient(from 180deg at 50% 50%, rgba(251,191,36,0.0), rgba(245,158,11,0.4), rgba(217,119,6,0.4), rgba(245,158,11,0.4), rgba(251,191,36,0.0))"
+              : color
+                ? `conic-gradient(from 180deg at 50% 50%, ${hexToRgba(color, 0)}, ${hexToRgba(color, 0.35)}, ${hexToRgba(adjustColor(color, -10), 0.35)}, ${hexToRgba(color, 0.35)}, ${hexToRgba(color, 0)})`
+                : "conic-gradient(from 180deg at 50% 50%, rgba(79,70,229,0.0), rgba(147,51,234,0.3), rgba(236,72,153,0.3), rgba(147,51,234,0.3), rgba(79,70,229,0.0))",
+            filter: "blur(12px)",
             opacity: "var(--glow, 0)",
             transform: "translateZ(1px)",
           }}
         />
-
-        {/* ORBITING CIRCLE (ORB) */}
+        
+        {/* Orbiting particle */}
         <div
           className="pointer-events-none absolute inset-0 -m-3 rounded-[1.25rem]"
           style={{ transformStyle: "preserve-3d" }}
-          aria-hidden="true"
         >
           <div
-            className="absolute left-1/2 top-1/2 h-2.5 w-2.5 rounded-full shadow-[0_0_24px_rgba(147,51,234,0.8)]"
+            className="absolute left-1/2 top-1/2 h-3 w-3 rounded-full"
             style={{
               transform: "rotate(var(--orb-rot, 0deg)) translateX(var(--orb-r, 120px)) translateZ(40px)",
-              background:
-                "radial-gradient(circle, rgba(236,72,153,0.98), rgba(147,51,234,0.93) 60%, rgba(79,70,229,0.9))",
-              opacity: "var(--orb-o, 0.12)",
-              transition: "opacity 200ms ease",
+              background: color 
+                ? `radial-gradient(circle, ${color}, ${hexToRgba(color, 0.95)} 60%, ${hexToRgba(color, 0.85)})`
+                : featured
+                  ? "radial-gradient(circle, rgba(251,191,36,1), rgba(245,158,11,0.95) 60%, rgba(217,119,6,0.9))"
+                  : "radial-gradient(circle, rgba(236,72,153,1), rgba(147,51,234,0.95) 60%, rgba(79,70,229,0.92))",
+              opacity: "var(--orb-o, 0)",
+              transition: "opacity 250ms ease",
+              boxShadow: color 
+                ? `0 0 28px ${hexToRgba(color, 0.85)}`
+                : featured
+                  ? "0 0 28px rgba(251,191,36,0.85)"
+                  : "0 0 28px rgba(147,51,234,0.85)",
             }}
           />
         </div>
-
-        {/* Card surface */}
+        
+        {/* Surface */}
         <div
           ref={surfaceRef}
-          className="relative rounded-2xl border backdrop-blur-xl transform-gpu shadow-sm"
+          className="relative rounded-2xl border backdrop-blur-xl transform-gpu h-full"
           style={{
-            // these are initialized and updated in applyThemeVisuals()
             background:
-              "linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.88) 22%), rgba(255,255,255,0.92)",
-            borderColor: "rgba(209,213,219,0.8)",
+              "linear-gradient(180deg, rgba(255,255,255,0.15), rgba(255,255,255,0) 20%), rgba(255,255,255,0.82)",
+            borderColor: "rgba(229,231,235,0.75)",
           }}
         >
-          {/* Brand-tinted inner gradient to match Home/About */}
+          {/* Brand tint */}
           <div
             className="absolute inset-0 rounded-2xl pointer-events-none"
             style={{
-              background: "linear-gradient(135deg, rgba(79,70,229,0.06), rgba(147,51,234,0.05), rgba(236,72,153,0.05))",
+              background: color 
+                ? `linear-gradient(135deg, ${hexToRgba(color, 0.08)}, ${hexToRgba(color, 0.06)}, ${hexToRgba(color, 0.04)})`
+                : "linear-gradient(135deg, rgba(79,70,229,0.07), rgba(147,51,234,0.06), rgba(236,72,153,0.06))",
             }}
           />
 
-          {/* Shine following cursor */}
+          {/* Shine overlay */}
           <div
             className="pointer-events-none absolute inset-0 rounded-2xl transition-opacity duration-200"
             style={{
               background:
-                "radial-gradient(500px circle at var(--mx, -100px) var(--my, -100px), rgba(255,255,255,0.5), rgba(255,255,255,0.08) 40%, transparent 60%)",
+                "radial-gradient(550px circle at var(--mx, -100px) var(--my, -100px), rgba(255,255,255,0.55), rgba(255,255,255,0.1) 40%, transparent 65%)",
               opacity: "var(--shine, 0)",
               mixBlendMode: "overlay",
               transform: "translateZ(5px)",
             }}
           />
 
-          {/* Content */}
+          {/* Content - FIXED HEIGHT */}
           <div
-            className="relative flex flex-col items-center text-center p-4 sm:p-6 min-h-[140px] sm:min-h-[160px]"
-            style={{ transform: "translateZ(12px)" }}
+            className="relative flex flex-col items-center text-center p-5 h-full justify-between"
+            style={{ transform: "translateZ(12px)", minHeight: "200px" }}
           >
-            <div className="mb-3 sm:mb-4">{iconFor(name)}</div>
-            <h3 className="text-base sm:text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-1">{name}</h3>
-            {level ? (
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{level}</p>
-            ) : (
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300/80">{"Modern, scalable development"}</p>
-            )}
+            <div className="flex flex-col items-center flex-1 justify-center">
+              {/* Icon/Logo */}
+              <div className="mb-3 flex items-center justify-center h-10 w-10">
+                {imageUrl ? (
+                  <div className="relative h-10 w-10">
+                    <Image
+                      src={imageUrl}
+                      alt={`${name} logo`}
+                      width={40}
+                      height={40}
+                      className="h-10 w-10 object-contain"
+                    />
+                  </div>
+                ) : (
+                  iconFor(name)
+                )}
+              </div>
+              
+              {/* Title */}
+              <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1.5 tracking-tight">
+                {name}
+              </h3>
+              
+              {/* Subtitle */}
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-snug px-1 mb-2 line-clamp-2">
+                {finalSubtitle}
+              </p>
+            </div>
 
-            {/* Brand accent line */}
-            <div
-              className="absolute bottom-0 left-6 right-6 h-[2px] rounded-full"
-              style={{
-                background:
-                  "linear-gradient(90deg, rgba(79,70,229,0.35), rgba(147,51,234,0.55), rgba(236,72,153,0.35))",
-              }}
-            />
+            {/* Bottom section */}
+            <div className="w-full space-y-2">
+              {/* Level badge */}
+              {level && (
+                <div className={`px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r ${levelColors[level] || levelColors.intermediate} border capitalize inline-block`}>
+                  {level}
+                </div>
+              )}
+
+              {/* Experience years */}
+              {yearsOfExperience !== undefined && yearsOfExperience > 0 && (
+                <p className="text-xs text-gray-500 dark:text-gray-500">
+                  {yearsOfExperience} {yearsOfExperience === 1 ? 'year' : 'years'} exp.
+                </p>
+              )}
+
+              {/* Proficiency bar */}
+              {proficiencyPercentage !== undefined && proficiencyPercentage > 0 && (
+                <div className="w-full px-2">
+                  <div className="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ 
+                        width: `${proficiencyPercentage}%`,
+                        background: color 
+                          ? `linear-gradient(90deg, ${color}, ${adjustColor(color, 20)})`
+                          : 'linear-gradient(90deg, rgb(99, 102, 241), rgb(168, 85, 247))'
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -319,62 +431,261 @@ function SkillCard({ name, level }: { name: string; level?: string }) {
   )
 }
 
+const CATEGORIES = [
+  { value: "all", label: "All Skills" },
+  { value: "frontend", label: "Frontend" },
+  { value: "backend", label: "Backend" },
+  { value: "tools", label: "DevOps & Tools" },
+  { value: "ai", label: "AI & ML" },
+  { value: "design", label: "Design" },
+  { value: "database", label: "Database" },
+]
+
 export function Skills() {
-  const [loaded, setLoaded] = useState<SkillDoc[] | null>(null)
+  const [skills, setSkills] = useState<SkillDoc[] | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState("all")
+
+  const query = `*[_type == "skill"] | order(featured desc, coalesce(order, 999999) asc, name asc){
+    _id, name, subtitle, level, category, order, featured, proficiencyPercentage, yearsOfExperience, color,
+    "imageUrl": image.asset->url
+  }`
+
+  async function fetchSkills() {
+    try {
+      setLoading(true)
+      setError(null)
+      const data = await client.fetch<SkillDoc[]>(query, {})
+      const seen = new Set<string>()
+      const unique = data.filter((s) => {
+        const key = s.name.trim().toLowerCase()
+        if (seen.has(key)) return false
+        seen.add(key)
+        return true
+      })
+      setSkills(unique)
+    } catch (e) {
+      console.error("Error fetching skills:", e)
+      setError("Failed to load skills. Please try again.")
+      setSkills([])
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    let cancelled = false
-    async function fetchSkills() {
-      try {
-        const data = await client.fetch<SkillDoc[]>(`*[_type == "skill"] | order(order asc){ _id, name, level, order }`)
-        if (!cancelled) setLoaded(data)
-      } catch {
-        if (!cancelled) setLoaded(null)
-      }
-    }
     fetchSkills()
-    return () => {
-      cancelled = true
+    let sub: { unsubscribe: () => void } | null = null
+    try {
+      // @ts-ignore
+      sub = client.listen(query).subscribe(() => {
+        fetchSkills()
+      })
+    } catch {
+      // no-op
     }
+    return () => {
+      sub?.unsubscribe?.()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Assemble final list from Sanity or fallback, but show only REQUIRED_SKILLS in order
-  const skillsToShow = useMemo(() => {
-    const source = loaded && loaded.length ? loaded : FALLBACK_SKILLS
-    const map = new Map(source.map((s) => [s.name.toLowerCase(), s]))
-    return REQUIRED_SKILLS.map((label, idx) => map.get(label.toLowerCase()) || { _id: `fb-${idx}`, name: label })
-  }, [loaded])
+  const filteredSkills = useMemo(() => {
+    if (!skills) return []
+    if (selectedCategory === "all") return skills
+    return skills.filter(s => s.category === selectedCategory)
+  }, [skills, selectedCategory])
+
+  const skillsByCategory = useMemo(() => {
+    if (!skills) return {}
+    const grouped: Record<string, SkillDoc[]> = {}
+    skills.forEach(skill => {
+      const cat = skill.category || "other"
+      if (!grouped[cat]) grouped[cat] = []
+      grouped[cat].push(skill)
+    })
+    return grouped
+  }, [skills])
+
+  const featuredSkills = useMemo(() => {
+    return skills?.filter(s => s.featured) || []
+  }, [skills])
+
+  const advancedSkills = useMemo(() => {
+    return skills?.filter(s => s.level === "expert" || s.level === "advanced") || []
+  }, [skills])
 
   return (
     <section
       id="skills"
-      className="py-12 sm:py-16 px-4 
-      bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/40 
-      dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 
-      transition-colors duration-500"
+      className="py-20 px-4 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-950 transition-colors duration-500"
     >
-      <div className="container mx-auto">
-        <div className="text-center mb-8 sm:mb-12">
-          <h2
-            className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 
-            bg-clip-text text-transparent 
-            bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 
-            dark:from-indigo-400 dark:via-purple-300 dark:to-pink-400"
-          >
-            {"My Skills"}
+      <div className="container mx-auto max-w-7xl">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 dark:from-indigo-400 dark:via-purple-300 dark:to-pink-400">
+            My Skills
           </h2>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4">
-            {"Here are the technologies and tools I use to build intelligent, scalable web experiences."}
+          <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto text-lg">
+            Technologies and tools I use to build intelligent, scalable, and future‑ready experiences.
           </p>
         </div>
 
-        {/* 3D interactive card grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 max-w-6xl mx-auto">
-          {skillsToShow.map((skill) => (
-            <SkillCard key={skill._id} name={skill.name} level={skill.level} />
-          ))}
-        </div>
+        {/* Category Filter */}
+        {!loading && !error && skills && skills.length > 0 && (
+          <div className="flex items-center justify-center gap-2 mb-12 flex-wrap">
+            <Filter className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+            {CATEGORIES.map((cat) => {
+              const count = cat.value === "all" 
+                ? skills.length 
+                : skills.filter(s => s.category === cat.value).length
+              
+              if (count === 0 && cat.value !== "all") return null
+              
+              return (
+                <button
+                  key={cat.value}
+                  onClick={() => setSelectedCategory(cat.value)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                    selectedCategory === cat.value
+                      ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30 scale-105"
+                      : "bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700"
+                  }`}
+                >
+                  {cat.label} {count > 0 && `(${count})`}
+                </button>
+              )
+            })}
+          </div>
+        )}
+
+        {/* Loading State */}
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-20">
+            <Loader2 className="h-12 w-12 animate-spin text-indigo-600 dark:text-indigo-400 mb-4" />
+            <p className="text-gray-600 dark:text-gray-400">Loading skills...</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !loading && (
+          <div className="max-w-md mx-auto text-center py-12 px-6 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-200 dark:border-red-800">
+            <p className="text-red-700 dark:text-red-400 mb-4">{error}</p>
+            <button
+              onClick={fetchSkills}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        )}
+
+        {/* Skills Grid */}
+        {!loading && !error && filteredSkills.length > 0 && (
+          <>
+            {/* Featured skills section */}
+            {selectedCategory === "all" && featuredSkills.length > 0 && (
+              <div className="mb-16">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                  <Star className="h-6 w-6 text-amber-500 fill-amber-500" />
+                  Featured Skills
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
+                  {featuredSkills.map((skill) => (
+                    <SkillCard
+                      key={skill._id}
+                      name={skill.name}
+                      subtitle={skill.subtitle}
+                      imageUrl={skill.imageUrl}
+                      level={skill.level}
+                      featured={skill.featured}
+                      proficiencyPercentage={skill.proficiencyPercentage}
+                      yearsOfExperience={skill.yearsOfExperience}
+                      color={skill.color}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Main skills grid */}
+            <div className={selectedCategory === "all" && featuredSkills.length > 0 ? "pt-8 border-t border-gray-200 dark:border-gray-700" : ""}>
+              {selectedCategory === "all" && featuredSkills.length > 0 && (
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                  All Skills
+                </h3>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
+                {filteredSkills.filter(s => !s.featured || selectedCategory !== "all").map((skill) => (
+                  <SkillCard
+                    key={skill._id}
+                    name={skill.name}
+                    subtitle={skill.subtitle}
+                    imageUrl={skill.imageUrl}
+                    level={skill.level}
+                    featured={skill.featured}
+                    proficiencyPercentage={skill.proficiencyPercentage}
+                    yearsOfExperience={skill.yearsOfExperience}
+                    color={skill.color}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Stats summary */}
+            {/* {selectedCategory === "all" && skills && skills.length > 0 && (
+              <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="text-center p-6 rounded-2xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200 dark:border-gray-700">
+                  <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+                    {skills.length}
+                  </div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Total Skills</div>
+                </div>
+                <div className="text-center p-6 rounded-2xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200 dark:border-gray-700">
+                  <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-orange-600">
+                    {featuredSkills.length}
+                  </div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Featured</div>
+                </div>
+                <div className="text-center p-6 rounded-2xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200 dark:border-gray-700">
+                  <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-emerald-600">
+                    {advancedSkills.length}
+                  </div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Advanced+</div>
+                </div>
+                <div className="text-center p-6 rounded-2xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200 dark:border-gray-700">
+                  <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-rose-600">
+                    {Object.keys(skillsByCategory).length}
+                  </div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Categories</div>
+                </div>
+              </div>
+            )} */}
+          </>
+        )}
+
+        {/* Empty State */}
+        {!loading && !error && filteredSkills.length === 0 && skills && skills.length > 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-600 dark:text-gray-400">No skills found in this category.</p>
+          </div>
+        )}
+
+        {!loading && !error && (!skills || skills.length === 0) && (
+          <div className="text-center py-16 px-6 max-w-lg mx-auto">
+            <div className="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30">
+              <Code2 className="h-10 w-10 text-indigo-600 dark:text-indigo-400" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              No skills added yet
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Head over to your Sanity Studio and publish some skills to showcase your expertise.
+            </p>
+          </div>
+        )}
       </div>
     </section>
   )
-}     
+}

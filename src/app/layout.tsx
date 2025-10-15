@@ -14,13 +14,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 })
 
-
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Muhammad Qasim — Frontend Developer",
   description:
-    "I’m Muhammad Qasim, a Frontend Developer and Python enthusiast exploring Agentic AI, the OpenAI SDK, Prompt & Context Engineering, and Web3. I craft custom websites, e‑commerce platforms, and AI‑driven solutions with Next.js, Tailwind CSS, Sanity, Stripe, and Streamlit.",
+    "I’m Muhammad Qasim, a Frontend Developer and Python enthusiast exploring Agentic AI, the OpenAI SDK, Prompt & Context Engineering, and Web3. I craft custom websites, e-commerce platforms, and AI-driven solutions with Next.js, Tailwind CSS, Sanity, Stripe, and Streamlit.",
   metadataBase: new URL("https://psqasim-portfolio.vercel.app"),
   alternates: {
     canonical: "https://psqasim-portfolio.vercel.app",
@@ -28,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Muhammad Qasim — Frontend Developer",
     description:
-      "Portfolio of Muhammad Qasim. Building intelligent, scalable, future‑ready web solutions using Next.js, Tailwind CSS, Sanity, Stripe, Streamlit, and more.",
+      "Portfolio of Muhammad Qasim. Building intelligent, scalable, future-ready web solutions using Next.js, Tailwind CSS, Sanity, Stripe, Streamlit, and more.",
     url: "https://psqasim-portfolio.vercel.app",
     siteName: "Qasim’s Portfolio",
     images: [
@@ -50,7 +49,7 @@ export const metadata: Metadata = {
     images: ["/og-image.jpg"],
   },
   icons: {
-    icon: "/qas.jpg", // ensure this file exists in /public
+    icon: "/qas.jpg",
   },
   keywords: [
     "Muhammad Qasim",
@@ -68,15 +67,19 @@ export const metadata: Metadata = {
     "Streamlit",
     "Karachi",
     "Pakistan",
-    "Portfolio",
-  ],
+    "Portfolio",],
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="light">
+    <html lang="en" suppressHydrationWarning> 
+      <body className={`${inter.className} ${geistSans.variable} ${geistMono.variable}`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"     // ✅ use system preference
+          enableSystem              // ✅ syncs with user OS theme
+          disableTransitionOnChange // ✅ prevents flicker
+        >
           {children}
         </ThemeProvider>
       </body>
