@@ -45,20 +45,20 @@ export default function Hero() {
     <section
       id="home"
       className="min-h-screen flex flex-col md:flex-row items-center justify-center 
-      bg-gradient-to-br from-blue-50 via-white to-blue-100 
+      bg-gradient-to-br from-indigo-50 via-sky-50 to-pink-50 
       dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 
       py-10 px-6 relative overflow-hidden"
     >
       {/* Subtle Background Shapes */}
       <div className="absolute top-0 left-0 w-full h-full opacity-10 dark:opacity-20 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-300 dark:bg-blue-900 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-purple-300 dark:bg-purple-900 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-indigo-300 dark:bg-blue-900 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-pink-300 dark:bg-purple-900 rounded-full blur-3xl"></div>
       </div>
 
       {/* Left: Text Section */}
       <div className="text-center md:text-left md:w-1/2 space-y-6 z-10 relative">
         <motion.h1
-          className="text-5xl font-bold text-gray-800 dark:text-white leading-tight"
+          className="text-5xl font-bold text-gray-900 dark:text-white leading-tight"
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 100 }}
@@ -71,7 +71,7 @@ export default function Hero() {
         </motion.h1>
 
         <motion.p
-          className="text-lg text-gray-700 dark:text-gray-300 max-w-md mx-auto md:mx-0"
+          className="text-lg text-gray-900 dark:text-gray-300 max-w-md mx-auto md:mx-0"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, type: "spring", stiffness: 100 }}
@@ -89,8 +89,8 @@ export default function Hero() {
           <a
             href="#contact"
             className="flex items-center gap-2 px-6 py-3 
-            bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl shadow-md 
-            hover:from-blue-700 hover:to-purple-700 
+            bg-gradient-to-r from-indigo-600 to-pink-600 text-white font-semibold rounded-xl shadow-lg 
+            hover:from-indigo-700 hover:to-pink-700 
             transition duration-300 ease-in-out transform 
             hover:-translate-y-1 hover:scale-105"
           >
@@ -101,7 +101,7 @@ export default function Hero() {
           <a
             href={emailHref}
             className="flex items-center gap-2 px-6 py-3 
-            bg-emerald-600 text-white font-semibold rounded-xl shadow-md
+            bg-emerald-600 text-white font-semibold rounded-xl shadow-lg
             hover:bg-emerald-700 
             transition duration-300 ease-in-out transform 
             hover:-translate-y-1 hover:scale-105"
@@ -115,7 +115,7 @@ export default function Hero() {
             download
             className="flex items-center gap-2 px-6 py-3 
             bg-gray-100 dark:bg-gray-800 
-            text-gray-700 dark:text-gray-300 
+            text-gray-900 dark:text-gray-300 
             font-semibold rounded-xl shadow-md
             hover:bg-gray-200 dark:hover:bg-gray-700 
             transition duration-300 ease-in-out transform 
@@ -130,7 +130,7 @@ export default function Hero() {
       {/* Right: Image Section */}
       <div className="mt-8 md:mt-0 md:w-1/2 flex justify-center">
         <motion.div
-          className="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden shadow-xl border-4 border-blue-500 dark:border-blue-600"
+          className="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden shadow-xl border-4 border-indigo-500 dark:border-blue-600"
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.8 }}

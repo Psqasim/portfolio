@@ -28,7 +28,7 @@ type SkillDoc = {
   _id: string
   name: string
   subtitle?: string
-  level?: string
+  level?: "beginner" | "intermediate" | "advanced" | "expert"
   category?: string
   order?: number
   imageUrl?: string
@@ -42,7 +42,7 @@ const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "",
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
   apiVersion: "2023-05-03",
-  useCdn: false,
+  useCdn: false, // live editing friendliness
 })
 
 function defaultSubtitle(name: string) {
@@ -72,20 +72,22 @@ function defaultSubtitle(name: string) {
 
 function iconFor(name: string) {
   const n = name.toLowerCase()
-  if (n.includes("open ai") || n.includes("openai")) return <Brain className="h-10 w-10 text-violet-500" />
-  if (n === "python") return <Braces className="h-10 w-10 text-yellow-600 dark:text-yellow-400" />
-  if (n === "vercel") return <Rocket className="h-10 w-10 text-gray-900 dark:text-gray-200" />
-  if (n.includes("context")) return <Share2 className="h-10 w-10 text-cyan-600 dark:text-cyan-400" />
-  if (n === "fastapi") return <Zap className="h-10 w-10 text-green-600 dark:text-green-400" />
-  if (n === "npm") return <Package className="h-10 w-10 text-rose-600 dark:text-rose-400" />
-  if (n === "nodejs" || n === "node") return <Server className="h-10 w-10 text-lime-600 dark:text-lime-400" />
-  if (n === "figma") return <Figma className="h-10 w-10 text-pink-600 dark:text-pink-400" />
-  if (n === "github") return <Github className="h-10 w-10 text-gray-900 dark:text-gray-200" />
-  if (n === "markdown") return <FileCode2 className="h-10 w-10 text-slate-600 dark:text-slate-300" />
-  if (n.includes("tailwind")) return <Wind className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
-  if (n.includes("git")) return <GitBranch className="h-10 w-10 text-red-600 dark:text-red-400" />
-  if (n.includes("css")) return <Palette className="h-10 w-10 text-purple-600 dark:text-purple-400" />
-  return <Code2 className="h-10 w-10 text-indigo-600 dark:text-indigo-400" />
+  if (n.includes("open ai") || n.includes("openai"))
+    return <Brain className="w-8 h-8 sm:w-10 sm:h-10 text-violet-500" />
+  if (n === "python") return <Braces className="w-8 h-8 sm:w-10 sm:h-10 text-yellow-600 dark:text-yellow-400" />
+  if (n === "vercel") return <Rocket className="w-8 h-8 sm:w-10 sm:h-10 text-gray-900 dark:text-gray-200" />
+  if (n.includes("context")) return <Share2 className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-600 dark:text-cyan-400" />
+  if (n === "fastapi") return <Zap className="w-8 h-8 sm:w-10 sm:h-10 text-green-600 dark:text-green-400" />
+  if (n === "npm") return <Package className="w-8 h-8 sm:w-10 sm:h-10 text-rose-600 dark:text-rose-400" />
+  if (n === "nodejs" || n === "node")
+    return <Server className="w-8 h-8 sm:w-10 sm:h-10 text-lime-600 dark:text-lime-400" />
+  if (n === "figma") return <Figma className="w-8 h-8 sm:w-10 sm:h-10 text-pink-600 dark:text-pink-400" />
+  if (n === "github") return <Github className="w-8 h-8 sm:w-10 sm:h-10 text-gray-900 dark:text-gray-200" />
+  if (n === "markdown") return <FileCode2 className="w-8 h-8 sm:w-10 sm:h-10 text-slate-600 dark:text-slate-300" />
+  if (n.includes("tailwind")) return <Wind className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-600 dark:text-emerald-400" />
+  if (n.includes("git")) return <GitBranch className="w-8 h-8 sm:w-10 sm:h-10 text-red-600 dark:text-red-400" />
+  if (n.includes("css")) return <Palette className="w-8 h-8 sm:w-10 sm:h-10 text-purple-600 dark:text-purple-400" />
+  return <Code2 className="w-8 h-8 sm:w-10 sm:h-10 text-indigo-600 dark:text-indigo-400" />
 }
 
 function isDark(): boolean {
@@ -93,31 +95,38 @@ function isDark(): boolean {
   return document.documentElement.classList.contains("dark")
 }
 
-// Helper to lighten/darken hex colors for better visibility
 function adjustColor(hex: string, percent: number): string {
-  if (!hex || !hex.startsWith('#')) return hex
-  const num = parseInt(hex.slice(1), 16)
+  if (!hex || !hex.startsWith("#")) return hex
+  const num = Number.parseInt(hex.slice(1), 16)
   const amt = Math.round(2.55 * percent)
   const R = Math.min(255, Math.max(0, (num >> 16) + amt))
-  const G = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amt))
-  const B = Math.min(255, Math.max(0, (num & 0x0000FF) + amt))
+  const G = Math.min(255, Math.max(0, ((num >> 8) & 0x00ff) + amt))
+  const B = Math.min(255, Math.max(0, (num & 0x0000ff) + amt))
   return `#${((1 << 24) | (R << 16) | (G << 8) | B).toString(16).slice(1)}`
 }
 
-function SkillCard({ 
-  name, 
-  subtitle, 
-  imageUrl, 
+function hexToRgba(hex: string, alpha: number) {
+  if (!hex || !hex.startsWith("#")) return `rgba(99,102,241,${alpha})` // indigo fallback
+  const res = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  return res
+    ? `rgba(${Number.parseInt(res[1], 16)},${Number.parseInt(res[2], 16)},${Number.parseInt(res[3], 16)},${alpha})`
+    : `rgba(99,102,241,${alpha})`
+}
+
+function SkillCard({
+  name,
+  subtitle,
+  imageUrl,
   level,
   featured,
   proficiencyPercentage,
   yearsOfExperience,
-  color
-}: { 
+  color,
+}: {
   name: string
   subtitle?: string
   imageUrl?: string
-  level?: string
+  level?: SkillDoc["level"]
   featured?: boolean
   proficiencyPercentage?: number
   yearsOfExperience?: number
@@ -130,19 +139,27 @@ function SkillCard({
   const lastEventRef = useRef<{ x: number; y: number } | null>(null)
   const orbActiveRef = useRef(false)
   const orbAngleRef = useRef(0)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener("resize", check)
+    return () => window.removeEventListener("resize", check)
+  }, [])
 
   const onMouseMove = (e: React.MouseEvent) => {
+    if (isMobile) return
     const el = cardRef.current
     if (!el) return
-    const rect = el.getBoundingClientRect()
-    lastEventRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top }
-
+    const r = el.getBoundingClientRect()
+    lastEventRef.current = { x: e.clientX - r.left, y: e.clientY - r.top }
     if (rafRef.current) cancelAnimationFrame(rafRef.current)
     rafRef.current = requestAnimationFrame(() => {
       if (!lastEventRef.current) return
       const { x, y } = lastEventRef.current
-      const px = x / rect.width
-      const py = y / rect.height
+      const px = x / r.width
+      const py = y / r.height
       const rx = (-(py - 0.5) * 10).toFixed(2)
       const ry = ((px - 0.5) * 10).toFixed(2)
       const tx = ((px - 0.5) * 6).toFixed(2)
@@ -157,12 +174,13 @@ function SkillCard({
   }
 
   const startOrb = () => {
+    if (isMobile) return
     const el = cardRef.current
     if (!el || orbActiveRef.current) return
     orbActiveRef.current = true
     const rect = el.getBoundingClientRect()
-    const r = Math.max(rect.width, rect.height) * 0.55
-    el.style.setProperty("--orb-r", `${r.toFixed(2)}px`)
+    const radius = Math.max(rect.width, rect.height) * 0.55
+    el.style.setProperty("--orb-r", `${radius.toFixed(2)}px`)
     const step = () => {
       if (!orbActiveRef.current) return
       orbAngleRef.current = (orbAngleRef.current + 0.6) % 360
@@ -178,7 +196,7 @@ function SkillCard({
     if (orbRAF.current) cancelAnimationFrame(orbRAF.current)
   }
 
-  const applyBaseStyles = () => {
+  const applyBase = () => {
     const el = cardRef.current
     if (!el) return
     el.style.setProperty("--rx", "0deg")
@@ -192,232 +210,244 @@ function SkillCard({
     el.style.setProperty("--orb-o", "0")
   }
 
-  const applyThemeVisuals = () => {
+  const applyThemeSurface = () => {
     const el = cardRef.current
     const surface = surfaceRef.current
     if (!el || !surface) return
     if (isDark()) {
+      // keep dark mode exactly as-is
       surface.style.background =
         "linear-gradient(180deg, rgba(17,24,39,0.35), rgba(17,24,39,0.25) 20%), rgba(17,24,39,0.7)"
       surface.style.borderColor = "rgba(55,65,81,0.65)"
     } else {
+      // Light mode: match Projects — crisp white glass with subtle border
       surface.style.background =
-        "linear-gradient(180deg, rgba(255,255,255,0.15), rgba(255,255,255,0) 20%), rgba(255,255,255,0.82)"
-      surface.style.borderColor = "rgba(229,231,235,0.75)"
+        "linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0) 18%), rgba(255,255,255,0.94)"
+      surface.style.borderColor = "rgba(228,228,231,0.9)" // zinc-200
     }
   }
 
   const onMouseEnter = () => {
+    if (isMobile) return
     const el = cardRef.current
     if (!el) return
     el.style.setProperty("--s", featured ? "1.06" : "1.04")
-    el.style.setProperty("--shadow", "0.35")
+    el.style.setProperty("--shadow", "0.30")
     el.style.setProperty("--shine", "0.75")
     el.style.setProperty("--glow", "0.9")
     el.style.setProperty("--orb-o", "1")
     startOrb()
   }
-  
+
   const onMouseLeave = () => {
-    applyBaseStyles()
+    applyBase()
     stopOrb()
   }
 
   useEffect(() => {
-    applyBaseStyles()
-    applyThemeVisuals()
+    applyBase()
+    applyThemeSurface()
     const html = document.documentElement
-    const obs = new MutationObserver(() => applyThemeVisuals())
+    const obs = new MutationObserver(() => applyThemeSurface())
     obs.observe(html, { attributes: true, attributeFilter: ["class"] })
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
       if (orbRAF.current) cancelAnimationFrame(orbRAF.current)
       obs.disconnect()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const finalSubtitle = subtitle || defaultSubtitle(name)
-  const levelColors: Record<string, string> = {
-    beginner: "from-blue-500/20 to-cyan-500/20 text-blue-700 dark:text-blue-300 border-blue-300/30 dark:border-blue-500/30",
-    intermediate: "from-green-500/20 to-emerald-500/20 text-green-700 dark:text-green-300 border-green-300/30 dark:border-green-500/30",
-    advanced: "from-purple-500/20 to-indigo-500/20 text-purple-700 dark:text-purple-300 border-purple-300/30 dark:border-purple-500/30",
-    expert: "from-amber-500/20 to-orange-500/20 text-amber-700 dark:text-amber-300 border-amber-300/30 dark:border-amber-500/30",
-  }
 
-  // Convert hex to rgba for gradient use
-  const hexToRgba = (hex: string, alpha: number) => {
-    if (!hex || !hex.startsWith('#')) return `rgba(147,51,234,${alpha})`
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-    return result
-      ? `rgba(${parseInt(result[1], 16)},${parseInt(result[2], 16)},${parseInt(result[3], 16)},${alpha})`
-      : `rgba(147,51,234,${alpha})`
+  const levelClasses: Record<NonNullable<SkillDoc["level"]>, string> = {
+    beginner:
+      "from-indigo-500/15 to-cyan-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-300/30 dark:border-indigo-500/30",
+    intermediate:
+      "from-emerald-500/15 to-green-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300/30 dark:border-emerald-500/30",
+    advanced:
+      "from-purple-500/15 to-fuchsia-500/15 text-purple-700 dark:text-purple-300 border-purple-300/30 dark:border-purple-500/30",
+    expert:
+      "from-amber-500/15 to-orange-500/15 text-amber-700 dark:text-amber-300 border-amber-300/30 dark:border-amber-500/30",
   }
 
   return (
-    <div className="relative group h-full" style={{ perspective: "1200px" }}>
-      {/* Featured badge */}
+    <div className="relative group h-full touch-manipulation" style={{ perspective: isMobile ? "none" : "1200px" }}>
       {featured && (
-        <div className="absolute -top-2 -right-2 z-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full p-2 shadow-lg">
-          <Star className="h-4 w-4 text-white fill-white" />
+        <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 z-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full p-1.5 sm:p-2 shadow-lg">
+          <Star className="w-3 h-3 sm:w-4 sm:h-4 text-white fill-white" />
         </div>
       )}
-      
+
       <div
         ref={cardRef}
         onMouseMove={onMouseMove}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        className="relative rounded-2xl p-[1px] transition-transform duration-200 overflow-visible h-full"
+        className="relative rounded-xl sm:rounded-2xl p-[1px] transition-transform duration-200 overflow-visible h-full"
         style={{
-          transform:
-            "rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translate3d(var(--tx, 0), var(--ty, 0), 0) scale(var(--s, 1))",
+          transform: isMobile
+            ? "scale(var(--s, 1))"
+            : "rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translate3d(var(--tx, 0), var(--ty, 0), 0) scale(var(--s, 1))",
           willChange: "transform",
-          background: featured 
-            ? "linear-gradient(135deg, rgba(251,191,36,0.3), rgba(245,158,11,0.3), rgba(217,119,6,0.3))"
-            : color 
-              ? `linear-gradient(135deg, ${hexToRgba(color, 0.25)}, ${hexToRgba(adjustColor(color, -10), 0.2)}, ${hexToRgba(adjustColor(color, -20), 0.15)})`
-              : "linear-gradient(135deg, rgba(79,70,229,0.2), rgba(147,51,234,0.2), rgba(236,72,153,0.2))",
-          boxShadow: featured 
-            ? "0 12px 28px rgba(251,191,36,0.25), 0 8px 8px rgba(245,158,11,0.2)"
-            : "0 12px 24px rgba(0,0,0,var(--shadow,0.14)), 0 8px 8px rgba(0,0,0,var(--shadow,0.14))",
-          transformStyle: "preserve-3d",
+          // Light mode outer gradient matches Projects (indigo -> purple -> pink). Dark mode unchanged via inner surface.
+          background: featured
+            ? "linear-gradient(135deg, rgba(251,191,36,0.25), rgba(245,158,11,0.25), rgba(217,119,6,0.25))"
+            : color
+              ? `linear-gradient(135deg, ${hexToRgba(
+                  color,
+                  0.18,
+                )}, ${hexToRgba(adjustColor(color, -10), 0.18)}, ${hexToRgba(adjustColor(color, -20), 0.16)})`
+              : "linear-gradient(135deg, rgba(99,102,241,0.18), rgba(147,51,234,0.18), rgba(236,72,153,0.18))",
+          boxShadow: featured
+            ? "0 12px 28px rgba(251,191,36,0.22), 0 8px 8px rgba(245,158,11,0.18)"
+            : "0 10px 20px rgba(0,0,0,var(--shadow,0.14)), 0 6px 6px rgba(0,0,0,var(--shadow,0.14))",
+          transformStyle: isMobile ? "flat" : "preserve-3d",
           borderRadius: "16px",
         }}
       >
-        {/* Glow effect */}
-        <div
-          className="pointer-events-none absolute inset-0 rounded-2xl transition-all duration-300"
-          style={{
-            background: featured
-              ? "conic-gradient(from 180deg at 50% 50%, rgba(251,191,36,0.0), rgba(245,158,11,0.4), rgba(217,119,6,0.4), rgba(245,158,11,0.4), rgba(251,191,36,0.0))"
-              : color
-                ? `conic-gradient(from 180deg at 50% 50%, ${hexToRgba(color, 0)}, ${hexToRgba(color, 0.35)}, ${hexToRgba(adjustColor(color, -10), 0.35)}, ${hexToRgba(color, 0.35)}, ${hexToRgba(color, 0)})`
-                : "conic-gradient(from 180deg at 50% 50%, rgba(79,70,229,0.0), rgba(147,51,234,0.3), rgba(236,72,153,0.3), rgba(147,51,234,0.3), rgba(79,70,229,0.0))",
-            filter: "blur(12px)",
-            opacity: "var(--glow, 0)",
-            transform: "translateZ(1px)",
-          }}
-        />
-        
-        {/* Orbiting particle */}
-        <div
-          className="pointer-events-none absolute inset-0 -m-3 rounded-[1.25rem]"
-          style={{ transformStyle: "preserve-3d" }}
-        >
+        {!isMobile && (
           <div
-            className="absolute left-1/2 top-1/2 h-3 w-3 rounded-full"
+            className="pointer-events-none absolute inset-0 rounded-xl sm:rounded-2xl transition-all duration-300"
             style={{
-              transform: "rotate(var(--orb-rot, 0deg)) translateX(var(--orb-r, 120px)) translateZ(40px)",
-              background: color 
-                ? `radial-gradient(circle, ${color}, ${hexToRgba(color, 0.95)} 60%, ${hexToRgba(color, 0.85)})`
-                : featured
-                  ? "radial-gradient(circle, rgba(251,191,36,1), rgba(245,158,11,0.95) 60%, rgba(217,119,6,0.9))"
-                  : "radial-gradient(circle, rgba(236,72,153,1), rgba(147,51,234,0.95) 60%, rgba(79,70,229,0.92))",
-              opacity: "var(--orb-o, 0)",
-              transition: "opacity 250ms ease",
-              boxShadow: color 
-                ? `0 0 28px ${hexToRgba(color, 0.85)}`
-                : featured
-                  ? "0 0 28px rgba(251,191,36,0.85)"
-                  : "0 0 28px rgba(147,51,234,0.85)",
+              background: featured
+                ? "conic-gradient(from 180deg at 50% 50%, rgba(251,191,36,0.0), rgba(245,158,11,0.35), rgba(217,119,6,0.35), rgba(245,158,11,0.35), rgba(251,191,36,0.0))"
+                : color
+                  ? `conic-gradient(from 180deg at 50% 50%, ${hexToRgba(
+                      color,
+                      0,
+                    )}, ${hexToRgba(color, 0.28)}, ${hexToRgba(
+                      adjustColor(color, -10),
+                      0.28,
+                    )}, ${hexToRgba(color, 0.28)}, ${hexToRgba(color, 0)})`
+                  : "conic-gradient(from 180deg at 50% 50%, rgba(99,102,241,0.0), rgba(147,51,234,0.28), rgba(236,72,153,0.28), rgba(147,51,234,0.28), rgba(99,102,241,0.0))",
+              filter: "blur(10px)",
+              opacity: "var(--glow, 0)",
+              transform: "translateZ(1px)",
             }}
           />
-        </div>
-        
-        {/* Surface */}
+        )}
+
+        {!isMobile && (
+          <div
+            className="pointer-events-none absolute inset-0 -m-3 rounded-[1.25rem]"
+            style={{ transformStyle: "preserve-3d" }}
+          >
+            <div
+              className="absolute left-1/2 top-1/2 h-3 w-3 rounded-full"
+              style={{
+                transform: "rotate(var(--orb-rot, 0deg)) translateX(var(--orb-r, 120px)) translateZ(40px)",
+                background: color
+                  ? `radial-gradient(circle, ${color}, ${hexToRgba(color, 0.95)} 60%, ${hexToRgba(color, 0.85)})`
+                  : featured
+                    ? "radial-gradient(circle, rgba(251,191,36,1), rgba(245,158,11,0.95) 60%, rgba(217,119,6,0.9))"
+                    : "radial-gradient(circle, rgba(236,72,153,1), rgba(147,51,234,0.95) 60%, rgba(99,102,241,0.92))",
+                opacity: "var(--orb-o, 0)",
+                transition: "opacity 240ms ease",
+                boxShadow: color
+                  ? `0 0 26px ${hexToRgba(color, 0.82)}`
+                  : featured
+                    ? "0 0 26px rgba(251,191,36,0.82)"
+                    : "0 0 26px rgba(147,51,234,0.82)",
+              }}
+            />
+          </div>
+        )}
+
+        {/* Surface (keep dark unchanged; light styled to match Projects) */}
         <div
           ref={surfaceRef}
-          className="relative rounded-2xl border backdrop-blur-xl transform-gpu h-full"
+          className="relative rounded-xl sm:rounded-2xl border backdrop-blur-xl transform-gpu h-full"
           style={{
             background:
-              "linear-gradient(180deg, rgba(255,255,255,0.15), rgba(255,255,255,0) 20%), rgba(255,255,255,0.82)",
-            borderColor: "rgba(229,231,235,0.75)",
+              "linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0) 18%), rgba(255,255,255,0.94)",
+            borderColor: "rgba(228,228,231,0.9)",
           }}
         >
-          {/* Brand tint */}
+          {/* Brand tint (light only tweaks) */}
           <div
-            className="absolute inset-0 rounded-2xl pointer-events-none"
+            className="absolute inset-0 rounded-xl sm:rounded-2xl pointer-events-none"
             style={{
-              background: color 
-                ? `linear-gradient(135deg, ${hexToRgba(color, 0.08)}, ${hexToRgba(color, 0.06)}, ${hexToRgba(color, 0.04)})`
-                : "linear-gradient(135deg, rgba(79,70,229,0.07), rgba(147,51,234,0.06), rgba(236,72,153,0.06))",
+              background: color
+                ? `linear-gradient(135deg, ${hexToRgba(color, 0.07)}, ${hexToRgba(color, 0.06)}, ${hexToRgba(
+                    color,
+                    0.05,
+                  )})`
+                : "linear-gradient(135deg, rgba(99,102,241,0.06), rgba(147,51,234,0.05), rgba(236,72,153,0.05))",
             }}
           />
 
-          {/* Shine overlay */}
-          <div
-            className="pointer-events-none absolute inset-0 rounded-2xl transition-opacity duration-200"
-            style={{
-              background:
-                "radial-gradient(550px circle at var(--mx, -100px) var(--my, -100px), rgba(255,255,255,0.55), rgba(255,255,255,0.1) 40%, transparent 65%)",
-              opacity: "var(--shine, 0)",
-              mixBlendMode: "overlay",
-              transform: "translateZ(5px)",
-            }}
-          />
+          {!isMobile && (
+            <div
+              className="pointer-events-none absolute inset-0 rounded-xl sm:rounded-2xl transition-opacity duration-200"
+              style={{
+                background:
+                  "radial-gradient(520px circle at var(--mx, -100px) var(--my, -100px), rgba(255,255,255,0.5), rgba(255,255,255,0.1) 40%, transparent 65%)",
+                opacity: "var(--shine, 0)",
+                mixBlendMode: "overlay",
+                transform: "translateZ(5px)",
+              }}
+            />
+          )}
 
-          {/* Content - FIXED HEIGHT */}
+          {/* Content */}
           <div
-            className="relative flex flex-col items-center text-center p-5 h-full justify-between"
-            style={{ transform: "translateZ(12px)", minHeight: "200px" }}
+            className="relative flex flex-col items-center text-center p-4 sm:p-5 h-full justify-between"
+            style={{
+              transform: isMobile ? "none" : "translateZ(12px)",
+              minHeight: "180px",
+            }}
           >
-            <div className="flex flex-col items-center flex-1 justify-center">
-              {/* Icon/Logo */}
-              <div className="mb-3 flex items-center justify-center h-10 w-10">
+            <div className="flex flex-col items-center flex-1 justify-center w-full">
+              <div className="mb-2 sm:mb-3 flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10">
                 {imageUrl ? (
-                  <div className="relative h-10 w-10">
+                  <div className="relative w-8 h-8 sm:w-10 sm:h-10">
                     <Image
-                      src={imageUrl}
+                      src={imageUrl || "/placeholder.svg"}
                       alt={`${name} logo`}
                       width={40}
                       height={40}
-                      className="h-10 w-10 object-contain"
+                      className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
                     />
                   </div>
                 ) : (
                   iconFor(name)
                 )}
               </div>
-              
-              {/* Title */}
-              <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1.5 tracking-tight">
+
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1 sm:mb-1.5 tracking-tight">
                 {name}
               </h3>
-              
-              {/* Subtitle */}
-              <p className="text-sm text-gray-600 dark:text-gray-400 leading-snug px-1 mb-2 line-clamp-2">
+
+              <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-400 leading-snug px-1 mb-2 line-clamp-2">
                 {finalSubtitle}
               </p>
             </div>
 
-            {/* Bottom section */}
-            <div className="w-full space-y-2">
-              {/* Level badge */}
+            <div className="w-full space-y-1.5 sm:space-y-2">
               {level && (
-                <div className={`px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r ${levelColors[level] || levelColors.intermediate} border capitalize inline-block`}>
+                <div
+                  className={`px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r ${levelClasses[level]} border capitalize inline-block`}
+                >
                   {level}
                 </div>
               )}
 
-              {/* Experience years */}
               {yearsOfExperience !== undefined && yearsOfExperience > 0 && (
-                <p className="text-xs text-gray-500 dark:text-gray-500">
-                  {yearsOfExperience} {yearsOfExperience === 1 ? 'year' : 'years'} exp.
+                <p className="text-xs text-gray-600 dark:text-gray-500">
+                  {yearsOfExperience} {yearsOfExperience === 1 ? "year" : "years"} exp.
                 </p>
               )}
 
-              {/* Proficiency bar */}
               {proficiencyPercentage !== undefined && proficiencyPercentage > 0 && (
-                <div className="w-full px-2">
-                  <div className="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                    <div 
+                <div className="w-full px-1 sm:px-2">
+                  <div className="h-1.5 bg-zinc-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div
                       className="h-full rounded-full transition-all duration-500"
-                      style={{ 
+                      style={{
                         width: `${proficiencyPercentage}%`,
-                        background: color 
-                          ? `linear-gradient(90deg, ${color}, ${adjustColor(color, 20)})`
-                          : 'linear-gradient(90deg, rgb(99, 102, 241), rgb(168, 85, 247))'
+                        background: color
+                          ? `linear-gradient(90deg, ${color}, ${adjustColor(color, 18)})`
+                          : "linear-gradient(90deg, rgb(99,102,241), rgb(168,85,247))",
                       }}
                     />
                   </div>
@@ -476,212 +506,177 @@ export function Skills() {
 
   useEffect(() => {
     fetchSkills()
-    let sub: { unsubscribe: () => void } | null = null
+    let sub: { unsubscribe?: () => void } | null = null
     try {
-      // @ts-ignore
+      // @ts-ignore - listen is available on next-sanity client
       sub = client.listen(query).subscribe(() => {
         fetchSkills()
       })
     } catch {
-      // no-op
+      // dataset may be private; ignore
     }
     return () => {
       sub?.unsubscribe?.()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const filteredSkills = useMemo(() => {
     if (!skills) return []
     if (selectedCategory === "all") return skills
-    return skills.filter(s => s.category === selectedCategory)
+    return skills.filter((s) => s.category === selectedCategory)
   }, [skills, selectedCategory])
 
-  const skillsByCategory = useMemo(() => {
-    if (!skills) return {}
-    const grouped: Record<string, SkillDoc[]> = {}
-    skills.forEach(skill => {
-      const cat = skill.category || "other"
-      if (!grouped[cat]) grouped[cat] = []
-      grouped[cat].push(skill)
-    })
-    return grouped
-  }, [skills])
-
-  const featuredSkills = useMemo(() => {
-    return skills?.filter(s => s.featured) || []
-  }, [skills])
-
-  const advancedSkills = useMemo(() => {
-    return skills?.filter(s => s.level === "expert" || s.level === "advanced") || []
-  }, [skills])
+  const featuredSkills = useMemo(() => skills?.filter((s) => s.featured) || [], [skills])
 
   return (
     <section
       id="skills"
-      className="py-20 px-4 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-950 transition-colors duration-500"
+      // Light mode palette now matches Projects (from-slate-50 via-white to-slate-50). Dark mode untouched.
+      className="py-12 sm:py-16 md:py-20 px-4 bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-950 transition-colors duration-500"
     >
       <div className="container mx-auto max-w-7xl">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 dark:from-indigo-400 dark:via-purple-300 dark:to-pink-400">
-            My Skills
+        <div className="text-center mb-8 sm:mb-10">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400">
+            {"My Skills"}
           </h2>
-          <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto text-lg">
-            Technologies and tools I use to build intelligent, scalable, and future‑ready experiences.
+          <p className="text-sm sm:text-base md:text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto px-4">
+            {"Technologies and tools I use to build intelligent, scalable, and future‑ready experiences."}
           </p>
         </div>
 
         {/* Category Filter */}
         {!loading && !error && skills && skills.length > 0 && (
-          <div className="flex items-center justify-center gap-2 mb-12 flex-wrap">
-            <Filter className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+          <div className="flex items-center justify-center gap-2 mb-8 sm:mb-12 flex-wrap px-2">
+            <Filter className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400 hidden sm:block" />
             {CATEGORIES.map((cat) => {
-              const count = cat.value === "all" 
-                ? skills.length 
-                : skills.filter(s => s.category === cat.value).length
-              
+              const count = cat.value === "all" ? skills.length : skills.filter((s) => s.category === cat.value).length
+
               if (count === 0 && cat.value !== "all") return null
-              
+
+              const isActive = selectedCategory === cat.value
+
               return (
                 <button
                   key={cat.value}
                   onClick={() => setSelectedCategory(cat.value)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                    selectedCategory === cat.value
-                      ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30 scale-105"
-                      : "bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700"
-                  }`}
+                  className={[
+                    "px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 border",
+                    isActive
+                      ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30 scale-105 border-transparent"
+                      : "bg-white/90 text-zinc-700 hover:bg-white border-zinc-200 dark:bg-gray-800/80 dark:text-gray-300 dark:hover:bg-gray-800 dark:border-gray-700",
+                  ].join(" ")}
                 >
-                  {cat.label} {count > 0 && `(${count})`}
+                  <span className="hidden sm:inline">{cat.label}</span>
+                  <span className="sm:hidden">{cat.label.split(" ")[0]}</span>
+                  {count > 0 && ` (${count})`}
                 </button>
               )
             })}
           </div>
         )}
 
-        {/* Loading State */}
+        {/* Loading */}
         {loading && (
-          <div className="flex flex-col items-center justify-center py-20">
-            <Loader2 className="h-12 w-12 animate-spin text-indigo-600 dark:text-indigo-400 mb-4" />
-            <p className="text-gray-600 dark:text-gray-400">Loading skills...</p>
+          <div className="flex flex-col items-center justify-center py-16 sm:py-20">
+            <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-indigo-600 dark:text-indigo-400 mb-4" />
+            <p className="text-sm sm:text-base text-gray-700 dark:text-gray-400">{"Loading skills..."}</p>
           </div>
         )}
 
-        {/* Error State */}
+        {/* Error */}
         {error && !loading && (
-          <div className="max-w-md mx-auto text-center py-12 px-6 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-200 dark:border-red-800">
-            <p className="text-red-700 dark:text-red-400 mb-4">{error}</p>
+          <div className="max-w-md mx-auto text-center py-8 sm:py-12 px-4 sm:px-6 bg-red-50 dark:bg-red-900/20 rounded-xl sm:rounded-2xl border border-red-200 dark:border-red-800">
+            <p className="text-sm sm:text-base text-red-700 dark:text-red-400 mb-4">{error}</p>
             <button
               onClick={fetchSkills}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+              className="px-4 py-2 text-sm sm:text-base bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
             >
-              Try Again
+              {"Try Again"}
             </button>
           </div>
         )}
 
-        {/* Skills Grid */}
+        {/* Skills */}
         {!loading && !error && filteredSkills.length > 0 && (
           <>
-            {/* Featured skills section */}
             {selectedCategory === "all" && featuredSkills.length > 0 && (
-              <div className="mb-16">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                  <Star className="h-6 w-6 text-amber-500 fill-amber-500" />
-                  Featured Skills
+              <div className="mb-12 sm:mb-16">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 flex items-center gap-2 px-2">
+                  <Star className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500 fill-amber-500" />
+                  {"Featured Skills"}
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
-                  {featuredSkills.map((skill) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
+                  {featuredSkills.map((s) => (
                     <SkillCard
-                      key={skill._id}
-                      name={skill.name}
-                      subtitle={skill.subtitle}
-                      imageUrl={skill.imageUrl}
-                      level={skill.level}
-                      featured={skill.featured}
-                      proficiencyPercentage={skill.proficiencyPercentage}
-                      yearsOfExperience={skill.yearsOfExperience}
-                      color={skill.color}
+                      key={s._id}
+                      name={s.name}
+                      subtitle={s.subtitle}
+                      imageUrl={s.imageUrl}
+                      level={s.level}
+                      featured={s.featured}
+                      proficiencyPercentage={s.proficiencyPercentage}
+                      yearsOfExperience={s.yearsOfExperience}
+                      color={s.color}
                     />
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Main skills grid */}
-            <div className={selectedCategory === "all" && featuredSkills.length > 0 ? "pt-8 border-t border-gray-200 dark:border-gray-700" : ""}>
+            <div
+              className={
+                selectedCategory === "all" && featuredSkills.length > 0
+                  ? "pt-6 sm:pt-8 border-t border-zinc-200 dark:border-gray-700"
+                  : ""
+              }
+            >
               {selectedCategory === "all" && featuredSkills.length > 0 && (
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                  All Skills
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 px-2">
+                  {"All Skills"}
                 </h3>
               )}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
-                {filteredSkills.filter(s => !s.featured || selectedCategory !== "all").map((skill) => (
-                  <SkillCard
-                    key={skill._id}
-                    name={skill.name}
-                    subtitle={skill.subtitle}
-                    imageUrl={skill.imageUrl}
-                    level={skill.level}
-                    featured={skill.featured}
-                    proficiencyPercentage={skill.proficiencyPercentage}
-                    yearsOfExperience={skill.yearsOfExperience}
-                    color={skill.color}
-                  />
-                ))}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
+                {filteredSkills
+                  .filter((s) => !s.featured || selectedCategory !== "all")
+                  .map((s) => (
+                    <SkillCard
+                      key={s._id}
+                      name={s.name}
+                      subtitle={s.subtitle}
+                      imageUrl={s.imageUrl}
+                      level={s.level}
+                      featured={s.featured}
+                      proficiencyPercentage={s.proficiencyPercentage}
+                      yearsOfExperience={s.yearsOfExperience}
+                      color={s.color}
+                    />
+                  ))}
               </div>
             </div>
-
-            {/* Stats summary */}
-            {/* {selectedCategory === "all" && skills && skills.length > 0 && (
-              <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div className="text-center p-6 rounded-2xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200 dark:border-gray-700">
-                  <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
-                    {skills.length}
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Total Skills</div>
-                </div>
-                <div className="text-center p-6 rounded-2xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200 dark:border-gray-700">
-                  <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-orange-600">
-                    {featuredSkills.length}
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Featured</div>
-                </div>
-                <div className="text-center p-6 rounded-2xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200 dark:border-gray-700">
-                  <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-emerald-600">
-                    {advancedSkills.length}
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Advanced+</div>
-                </div>
-                <div className="text-center p-6 rounded-2xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200 dark:border-gray-700">
-                  <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-rose-600">
-                    {Object.keys(skillsByCategory).length}
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Categories</div>
-                </div>
-              </div>
-            )} */}
           </>
         )}
 
-        {/* Empty State */}
+        {/* Empty (filtered) */}
         {!loading && !error && filteredSkills.length === 0 && skills && skills.length > 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-600 dark:text-gray-400">No skills found in this category.</p>
+          <div className="text-center py-8 sm:py-12 px-4">
+            <p className="text-sm sm:text-base text-gray-700 dark:text-gray-400">
+              {"No skills found in this category."}
+            </p>
           </div>
         )}
 
+        {/* Empty (no skills) */}
         {!loading && !error && (!skills || skills.length === 0) && (
-          <div className="text-center py-16 px-6 max-w-lg mx-auto">
-            <div className="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30">
-              <Code2 className="h-10 w-10 text-indigo-600 dark:text-indigo-400" />
+          <div className="text-center py-12 sm:py-16 px-4 sm:px-6 max-w-lg mx-auto">
+            <div className="mb-4 sm:mb-6 inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30">
+              <Code2 className="w-8 h-8 sm:w-10 sm:h-10 text-indigo-600 dark:text-indigo-400" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              No skills added yet
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              {"No skills added yet"}
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Head over to your Sanity Studio and publish some skills to showcase your expertise.
+            <p className="text-sm sm:text-base text-gray-700 dark:text-gray-400 mb-4 sm:mb-6">
+              {"Head over to your Sanity Studio and publish some skills to showcase your expertise."}
             </p>
           </div>
         )}
