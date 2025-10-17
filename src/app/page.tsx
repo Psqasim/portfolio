@@ -1,3 +1,4 @@
+// @ts-ignore: CSS side-effect import has no type declarations
 import "./globals.css";
 
 import Hero from "./components/Hero";

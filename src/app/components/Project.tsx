@@ -157,7 +157,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               </div>
             </div>
 
-            <div className="absolute bottom-3 left-3 right-3 flex items-center gap-2">
+            <div className="absolute bottom-3 left-3 right-3 flex items-center gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:translate-y-4 sm:group-hover:translate-y-0 transition-all duration-300">
+
               {isPrivate ? (
                 <div className="flex-1 px-3 py-1.5 bg-zinc-900/85 dark:bg-gray-700/85 rounded-md text-white text-xs font-medium flex items-center justify-center border border-zinc-800 dark:border-gray-600">
                   <Lock className="mr-1.5 h-4 w-4" />

@@ -1,6 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono, Inter } from "next/font/google"
+// @ts-ignore: CSS side-effect import has no type declarations
 import "./globals.css"
 import { ThemeProvider } from "./theme-provider"
 
@@ -75,9 +76,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning> 
       <body className={`${inter.className} ${geistSans.variable} ${geistMono.variable}`}>
         <ThemeProvider
-          attribute="class"
-          defaultTheme="system"     // ✅ use system preference
-          enableSystem              // ✅ syncs with user OS theme
+           attribute="class"
+      defaultTheme="dark"         // 👈 Always start in DARK mode
+      enableSystem={false}        // 👈 Ignore OS system theme
           disableTransitionOnChange // ✅ prevents flicker
         >
           {children}
