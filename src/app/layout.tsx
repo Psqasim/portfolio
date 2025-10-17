@@ -76,9 +76,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning> 
       <body className={`${inter.className} ${geistSans.variable} ${geistMono.variable}`}>
         <ThemeProvider
-           attribute="class"
-      defaultTheme="dark"         // 👈 Always start in DARK mode
-      enableSystem={false}        // 👈 Ignore OS system theme
+          attribute="class"
+          defaultTheme="system"     // ✅ use system preference
+          enableSystem              // ✅ syncs with user OS theme
           disableTransitionOnChange // ✅ prevents flicker
         >
           {children}
