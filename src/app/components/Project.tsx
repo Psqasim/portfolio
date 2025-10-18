@@ -4,9 +4,10 @@ import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import { PortableText } from "@portabletext/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Github, ExternalLink, Calendar, X, RefreshCw, AlertCircle } from "lucide-react";
+import { Github, ExternalLink, Calendar, X, RefreshCw, AlertCircle, Eclipse, Eye, Telescope } from "lucide-react";
 import { createClient } from "@sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
+import { FiExternalLink } from "react-icons/fi";
 
 // ============================================
 // SANITY CLIENT SETUP
@@ -360,6 +361,7 @@ export default function Projects() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3, delay: index * 0.05 }}
+              // here is cut and paste in see more 
               onClick={() => setSelectedProject(project)}
               className="group cursor-pointer bg-white dark:bg-gray-800/30 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden hover:border-indigo-400 dark:hover:border-blue-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-200/20 dark:hover:shadow-blue-500/10 hover:-translate-y-1"
             >
@@ -393,9 +395,25 @@ export default function Projects() {
                 {/* Description Preview */}
                 <div className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
                   <PortableText
+                    
                     value={project.description}
+                    
                     components={portableTextComponents}
                   />
+                </div>
+                <div className="flex items-center justify-between mb-4">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedProject(project);
+                    }}
+                    aria-label={`See more about ${project.title}`}
+                    className="inline-flex items-center gap-2 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-sm font-medium rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 active:scale-95 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-400"
+                  >
+                    See more
+                    <Telescope size={14} />
+                  </button>
                 </div>
 
                 {/* Tags */}
@@ -406,6 +424,7 @@ export default function Projects() {
                       className="px-2 py-1 bg-gray-100 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 text-xs rounded-md border border-gray-200 dark:border-gray-600"
                     >
                       {tag}
+
                     </span>
                   ))}
                   {project.tags.length > 4 && (
@@ -498,33 +517,43 @@ export default function Projects() {
                 </button>
               </div>
 
-              {/* Modal Content */}
-              <div className="p-6 sm:p-8">
+                {/* Modal Content */}
+                <div className="p-6 sm:p-8">
                 <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
                   <div>
-                    <h2 className="text-3xl font-bold text-cyan-600 dark:text-white mb-2">
-                      {selectedProject.title}
-                    </h2>
-                    {selectedProject.category && (
-                      <p className="text-emerald-500 dark:text-gray-300">
-                        {getCategoryLabel(selectedProject.category)}
-                      </p>
-                    )}
+                  <h2 className="text-3xl font-bold text-cyan-600 dark:text-cyan-300 mb-2">
+                    {selectedProject.title}
+                  </h2>
+                  {selectedProject.category && (
+                    <p className="text-emerald-500 dark:text-emerald-300">
+                    {getCategoryLabel(selectedProject.category)}
+                    </p>
+                  )}
                   </div>
                   <span
-                    className={`px-4 py-2 rounded-full text-sm font-medium border ${getStatusColor(
-                      selectedProject.status
-                    )}`}
+                  className={`px-4 py-2 rounded-full text-sm font-medium border ${getStatusColor(
+                    selectedProject.status
+                  )}`}
                   >
-                    {selectedProject.status.replace("-", " ")}
+                  {selectedProject.status.replace("-", " ")}
                   </span>
                 </div>
 
                 {/* Full Description */}
-                <div className="mb-6 text-gray-700 dark:text-gray-200">
+                <div className="mb-6 prose prose-gray dark:prose-invert prose-p:dark:text-gray-200 max-w-none">
                   <PortableText
-                    value={selectedProject.description}
-                    components={portableTextComponents}
+                  value={selectedProject.description}
+                  components={{
+                    ...portableTextComponents,
+                    block: {
+                    ...portableTextComponents.block,
+                    normal: ({ children }: any) => (
+                      <p className="mb-4 leading-relaxed text-gray-700 dark:text-gray-200">
+                      {children}
+                      </p>
+                    ),
+                    }
+                  }}
                   />
                 </div>
 
@@ -563,25 +592,36 @@ export default function Projects() {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-4">
-                  {selectedProject.github && !selectedProject.isPrivateRepo && (
-                    <a
-                      href={selectedProject.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-6 py-3 bg-gray-800 hover:bg-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 text-white rounded-lg transition-all hover:scale-105 active:scale-95 shadow-lg"
-                    >
-                      <Github size={20} />
-                      View Source Code
-                    </a>
-                  )}
+                  {selectedProject.github && !selectedProject.isPrivateRepo ? (
                   <a
-                    href={selectedProject.demo}
+                    href={selectedProject.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-lg transition-all hover:scale-105 active:scale-95 shadow-lg"
+                    className="flex items-center gap-2 px-6 py-3 bg-gray-800 hover:bg-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 text-white rounded-lg transition-all hover:scale-105 active:scale-95 shadow-lg"
                   >
-                    <ExternalLink size={20} />
-                    Visit Live Site
+                    <Github size={20} />
+                    View Source Code
+                  </a>
+                  ) : (
+                  <button
+                    disabled
+                    className="flex items-center gap-2 px-6 py-3 bg-gray-500 dark:bg-gray-700 text-white rounded-lg cursor-not-allowed opacity-75"
+                  >
+                    <Github size={20} />
+                    Private Repository
+                    <span className="ml-1 bg-gray-600 dark:bg-gray-600 px-2 py-0.5 rounded-md text-xs">
+                    Protected
+                    </span>
+                  </button>
+                  )}
+                  <a
+                  href={selectedProject.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-lg transition-all hover:scale-105 active:scale-95 shadow-lg"
+                  >
+                  <ExternalLink size={20} />
+                  Visit Live Site
                   </a>
                 </div>
               </div>

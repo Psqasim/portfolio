@@ -19,11 +19,24 @@ export default defineType({
       description: "Short intro used in the Hero section.",
     }),
     defineField({
-      name: "about",
-      title: "About Paragraph",
-      type: "text",
-      rows: 8,
-      description: "Longer paragraph used in the About section.",
+      name: "description",
+      title: "Project Description",
+      type: "array",
+      of: [
+        {
+          type: "block",
+          styles: [{ title: "Normal", value: "normal" }],
+          lists: [],
+          marks: {
+            decorators: [
+              { title: "Strong", value: "strong" },
+              { title: "Emphasis", value: "em" },
+            ],
+          },
+        },
+      ],
+      validation: (Rule) => Rule.required(),
+      description: "Detailed description of the project (2–3 sentences recommended)",
     }),
     defineField({
       name: "email",
