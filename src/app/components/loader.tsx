@@ -6,7 +6,7 @@ export default function Loader() {
   const [show, setShow] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShow(false), 5000);
+    const timer = setTimeout(() => setShow(false), 6000);
     return () => clearTimeout(timer);
   }, []);
 
