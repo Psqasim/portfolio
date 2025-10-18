@@ -31,7 +31,7 @@ export default defineType({
           { title: "AI & Machine Learning", value: "ai" },
           { title: "Design", value: "design" },
           { title: "Database", value: "database" },
-          { title: "API Development", value: "api" }
+          { title: "API Development", value: "api" },
         ],
         layout: "dropdown",
       },
@@ -41,7 +41,7 @@ export default defineType({
       name: "level",
       title: "Proficiency Level",
       type: "string",
-      description: "Your proficiency level with this skill",
+      description: "Your proficiency level with this skill. Be realistic: only mark 'Expert' if you have 4+ years.",
       options: {
         list: [
           { title: "Beginner", value: "beginner" },
@@ -57,7 +57,7 @@ export default defineType({
       name: "proficiencyPercentage",
       title: "Proficiency Percentage",
       type: "number",
-      description: "Your proficiency as a percentage (0-100) for visual progress bars",
+      description: "Your proficiency as a percentage (0-100) for visual progress bars. Align with years of experience.",
       validation: (Rule) => Rule.min(0).max(100).integer(),
       initialValue: 75,
     }),
@@ -65,9 +65,9 @@ export default defineType({
       name: "image",
       title: "Logo",
       type: "image",
-      options: { 
+      options: {
         hotspot: true,
-        accept: 'image/png,image/svg+xml,image/jpeg,image/webp'
+        accept: "image/png,image/svg+xml,image/jpeg,image/webp",
       },
       description: "Upload a logo (PNG/SVG preferred). Transparent backgrounds work best. Recommended: 512x512px",
       validation: (Rule) => Rule.required().error("Please upload a skill logo for better visual consistency"),
@@ -76,18 +76,29 @@ export default defineType({
       name: "color",
       title: "Brand Color (Optional)",
       type: "string",
-      description: "Primary brand color for this technology (e.g., #61DAFB for React). Used for glow effects and progress bars.",
-      validation: (Rule) => Rule.regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
-        name: "hex color",
-        invert: false,
-      }).warning("Please use hex color format (e.g., #61DAFB)"),
+      description:
+        "Primary brand color for this technology (e.g., #61DAFB for React). Used for glow effects and progress bars.",
+      validation: (Rule) =>
+        Rule.regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
+          name: "hex color",
+          invert: false,
+        }).warning("Please use hex color format (e.g., #61DAFB)"),
     }),
     defineField({
       name: "yearsOfExperience",
       title: "Years of Experience (Optional)",
       type: "number",
-      description: "How many years you've been using this skill",
+      description:
+        "How many years you've been using this skill. Beginner ≤1, Intermediate 1–2, Advanced 2–4, Expert 4+.",
       validation: (Rule) => Rule.min(0).max(50).precision(1),
+    }),
+    defineField({
+      name: "usedInProjects",
+      title: "Used In Projects (Optional)",
+      type: "string",
+      description:
+        "Ground your claim with a real example: e.g., 'E-commerce Platform', 'AI Chat Dashboard'. Recruiters love concrete proof.",
+      validation: (Rule) => Rule.max(50).warning("Keep this under 50 characters"),
     }),
     defineField({
       name: "featured",
@@ -106,17 +117,18 @@ export default defineType({
     }),
   ],
   preview: {
-    select: { 
-      title: "name", 
+    select: {
+      title: "name",
       subtitle: "category",
       level: "level",
       media: "image",
-      featured: "featured"
+      featured: "featured",
+      years: "yearsOfExperience",
     },
-    prepare({ title, subtitle, level, media, featured }) {
+    prepare({ title, subtitle, level, media, featured, years }) {
       return {
         title: `${featured ? "⭐ " : ""}${title}`,
-        subtitle: `${subtitle || "Uncategorized"} • ${level || "No level set"}`,
+        subtitle: `${subtitle || "Uncategorized"} • ${level || "No level"} ${years ? `• ${years}y` : ""}`,
         media,
       }
     },

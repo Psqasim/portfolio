@@ -22,6 +22,8 @@ import {
   Loader2,
   Star,
   Filter,
+  Briefcase,
+  TrendingUp,
 } from "lucide-react"
 
 type SkillDoc = {
@@ -36,13 +38,14 @@ type SkillDoc = {
   featured?: boolean
   proficiencyPercentage?: number
   yearsOfExperience?: number
+  usedInProjects?: string
 }
 
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "",
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
   apiVersion: "2023-05-03",
-  useCdn: false, // live editing friendliness
+  useCdn: false,
 })
 
 function defaultSubtitle(name: string) {
@@ -106,7 +109,7 @@ function adjustColor(hex: string, percent: number): string {
 }
 
 function hexToRgba(hex: string, alpha: number) {
-  if (!hex || !hex.startsWith("#")) return `rgba(99,102,241,${alpha})` // indigo fallback
+  if (!hex || !hex.startsWith("#")) return `rgba(99,102,241,${alpha})`
   const res = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
   return res
     ? `rgba(${Number.parseInt(res[1], 16)},${Number.parseInt(res[2], 16)},${Number.parseInt(res[3], 16)},${alpha})`
@@ -122,6 +125,7 @@ function SkillCard({
   proficiencyPercentage,
   yearsOfExperience,
   color,
+  usedInProjects,
 }: {
   name: string
   subtitle?: string
@@ -131,6 +135,7 @@ function SkillCard({
   proficiencyPercentage?: number
   yearsOfExperience?: number
   color?: string
+  usedInProjects?: string
 }) {
   const cardRef = useRef<HTMLDivElement | null>(null)
   const surfaceRef = useRef<HTMLDivElement | null>(null)
@@ -215,15 +220,13 @@ function SkillCard({
     const surface = surfaceRef.current
     if (!el || !surface) return
     if (isDark()) {
-      // keep dark mode exactly as-is
       surface.style.background =
         "linear-gradient(180deg, rgba(17,24,39,0.35), rgba(17,24,39,0.25) 20%), rgba(17,24,39,0.7)"
       surface.style.borderColor = "rgba(55,65,81,0.65)"
     } else {
-      // Light mode: match Projects — crisp white glass with subtle border
       surface.style.background =
         "linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0) 18%), rgba(255,255,255,0.94)"
-      surface.style.borderColor = "rgba(228,228,231,0.9)" // zinc-200
+      surface.style.borderColor = "rgba(228,228,231,0.9)"
     }
   }
 
@@ -273,7 +276,7 @@ function SkillCard({
   return (
     <div className="relative group h-full touch-manipulation" style={{ perspective: isMobile ? "none" : "1200px" }}>
       {featured && (
-        <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 z-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full p-1.5 sm:p-2 shadow-lg">
+        <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 z-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full p-1.5 sm:p-2 shadow-lg animate-pulse">
           <Star className="w-3 h-3 sm:w-4 sm:h-4 text-white fill-white" />
         </div>
       )}
@@ -289,7 +292,6 @@ function SkillCard({
             ? "scale(var(--s, 1))"
             : "rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translate3d(var(--tx, 0), var(--ty, 0), 0) scale(var(--s, 1))",
           willChange: "transform",
-          // Light mode outer gradient matches Projects (indigo -> purple -> pink). Dark mode unchanged via inner surface.
           background: featured
             ? "linear-gradient(135deg, rgba(251,191,36,0.25), rgba(245,158,11,0.25), rgba(217,119,6,0.25))"
             : color
@@ -353,7 +355,6 @@ function SkillCard({
           </div>
         )}
 
-        {/* Surface (keep dark unchanged; light styled to match Projects) */}
         <div
           ref={surfaceRef}
           className="relative rounded-xl sm:rounded-2xl border backdrop-blur-xl transform-gpu h-full"
@@ -363,7 +364,6 @@ function SkillCard({
             borderColor: "rgba(228,228,231,0.9)",
           }}
         >
-          {/* Brand tint (light only tweaks) */}
           <div
             className="absolute inset-0 rounded-xl sm:rounded-2xl pointer-events-none"
             style={{
@@ -389,12 +389,11 @@ function SkillCard({
             />
           )}
 
-          {/* Content */}
           <div
             className="relative flex flex-col items-center text-center p-4 sm:p-5 h-full justify-between"
             style={{
               transform: isMobile ? "none" : "translateZ(12px)",
-              minHeight: "180px",
+              minHeight: "200px",
             }}
           >
             <div className="flex flex-col items-center flex-1 justify-center w-full">
@@ -424,22 +423,38 @@ function SkillCard({
             </div>
 
             <div className="w-full space-y-1.5 sm:space-y-2">
+              {/* Level Badge with Confidence Indicator */}
               {level && (
-                <div
-                  className={`px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r ${levelClasses[level]} border capitalize inline-block`}
-                >
-                  {level}
+                <div className="flex items-center justify-center gap-2">
+                  <div
+                    className={`px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r ${levelClasses[level]} border capitalize flex items-center gap-1`}
+                  >
+                    <span>{level}</span>
+                    <TrendingUp className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                  </div>
                 </div>
               )}
 
+              {/* Experience + Credibility */}
               {yearsOfExperience !== undefined && yearsOfExperience > 0 && (
-                <p className="text-xs text-gray-600 dark:text-gray-500">
-                  {yearsOfExperience} {yearsOfExperience === 1 ? "year" : "years"} exp.
+                <div className="flex items-center justify-center gap-1.5 text-xs text-gray-600 dark:text-gray-500">
+                  <Briefcase className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                  <span className="font-medium">
+                    {yearsOfExperience} {yearsOfExperience === 1 ? "year" : "years"} exp.
+                  </span>
+                </div>
+              )}
+
+              {/* Project Reference (grounded credibility) */}
+              {usedInProjects && (
+                <p className="text-xs text-gray-500 dark:text-gray-600 italic line-clamp-1 px-1">
+                  {`Used in: ${usedInProjects}`}
                 </p>
               )}
 
+              {/* Proficiency Bar */}
               {proficiencyPercentage !== undefined && proficiencyPercentage > 0 && (
-                <div className="w-full px-1 sm:px-2">
+                <div className="w-full px-1 sm:px-2 pt-1">
                   <div className="h-1.5 bg-zinc-200 dark:bg-gray-700 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-500"
@@ -451,6 +466,9 @@ function SkillCard({
                       }}
                     />
                   </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-600 mt-0.5 text-center">
+                    {proficiencyPercentage}%
+                  </p>
                 </div>
               )}
             </div>
@@ -478,7 +496,7 @@ export function Skills() {
   const [selectedCategory, setSelectedCategory] = useState("all")
 
   const query = `*[_type == "skill"] | order(featured desc, coalesce(order, 999999) asc, name asc){
-    _id, name, subtitle, level, category, order, featured, proficiencyPercentage, yearsOfExperience, color,
+    _id, name, subtitle, level, category, order, featured, proficiencyPercentage, yearsOfExperience, color, usedInProjects,
     "imageUrl": image.asset->url
   }`
 
@@ -508,12 +526,12 @@ export function Skills() {
     fetchSkills()
     let sub: { unsubscribe?: () => void } | null = null
     try {
-      // @ts-ignore - listen is available on next-sanity client
+      // @ts-ignore
       sub = client.listen(query).subscribe(() => {
         fetchSkills()
       })
     } catch {
-      // dataset may be private; ignore
+      // ignore
     }
     return () => {
       sub?.unsubscribe?.()
@@ -531,7 +549,6 @@ export function Skills() {
   return (
     <section
       id="skills"
-      // Light mode palette now matches Projects (from-slate-50 via-white to-slate-50). Dark mode untouched.
       className="py-12 sm:py-16 md:py-20 px-4 bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-950 transition-colors duration-500"
     >
       <div className="container mx-auto max-w-7xl">
@@ -617,6 +634,7 @@ export function Skills() {
                       proficiencyPercentage={s.proficiencyPercentage}
                       yearsOfExperience={s.yearsOfExperience}
                       color={s.color}
+                      usedInProjects={s.usedInProjects}
                     />
                   ))}
                 </div>
@@ -650,6 +668,7 @@ export function Skills() {
                       proficiencyPercentage={s.proficiencyPercentage}
                       yearsOfExperience={s.yearsOfExperience}
                       color={s.color}
+                      usedInProjects={s.usedInProjects}
                     />
                   ))}
               </div>
