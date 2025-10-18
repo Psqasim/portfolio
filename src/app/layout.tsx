@@ -5,6 +5,7 @@ import { Geist, Geist_Mono, Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "./theme-provider"
 import Loader from "./components/loader"
+import LoaderWrapper from "./components/LoaderWrappper"
 
 
 const geistSans = Geist({
@@ -85,8 +86,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           enableSystem
           disableTransitionOnChange
         >
-          <Loader />
-          {children}
+          <LoaderWrapper>{children}</LoaderWrapper>
         </ThemeProvider>
       </body>
     </html>
