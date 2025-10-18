@@ -259,7 +259,7 @@ export default function Loader() {
   );
 }
 
-// uoer cloude aiii
+// upper cloud animation
 
 // --------
 // "use client";
