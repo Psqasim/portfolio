@@ -4,6 +4,7 @@ import { Geist, Geist_Mono, Inter } from "next/font/google"
 // @ts-ignore: CSS side-effect import has no type declarations
 import "./globals.css"
 import { ThemeProvider } from "./theme-provider"
+import Loader from "./components/loader"
 
 
 const geistSans = Geist({
@@ -84,6 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           enableSystem
           disableTransitionOnChange
         >
+          <Loader />
           {children}
         </ThemeProvider>
       </body>

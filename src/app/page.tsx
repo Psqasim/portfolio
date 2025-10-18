@@ -10,7 +10,6 @@ import { Footer } from "./components/Footer";
 import { AboutMe } from "./components/About";
 import Navbar from "./components/Navbar";
 import Projects from "./components/Project";
-import Loader from "./components/loader"
 
 
 
@@ -18,7 +17,7 @@ export default function Page (){
   return(
 
    <>
-          <Loader />
+          
     
     <Navbar/>
     <Hero/>
