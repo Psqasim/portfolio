@@ -18,9 +18,9 @@ export default function Page (){
    <>
     <Navbar/>
     <Hero/>
-    <Projects/>
-    <Skills/>
     <AboutMe/>
+    <Skills/>
+    <Projects/>
     
     <Contact/>
     <Footer/>

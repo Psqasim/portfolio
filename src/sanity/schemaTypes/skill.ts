@@ -31,6 +31,7 @@ export default defineType({
           { title: "AI & Machine Learning", value: "ai" },
           { title: "Design", value: "design" },
           { title: "Database", value: "database" },
+          { title: "API Development", value: "api" }
         ],
         layout: "dropdown",
       },
