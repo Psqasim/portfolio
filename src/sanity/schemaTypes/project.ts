@@ -49,7 +49,6 @@ export default defineType({
       validation: (Rule) => Rule.required().min(1).max(8),
       description: "Add technologies used (e.g., Next.js, TypeScript, Tailwind CSS)",
     }),
-    // featured removed as requested
     defineField({
       name: "github",
       title: "GitHub Repository URL",
@@ -125,10 +124,14 @@ export default defineType({
     { title: "Newest First", name: "newestFirst", by: [{ field: "_createdAt", direction: "desc" }] },
   ],
   preview: {
-    select: { title: "title", media: "image", subtitle: "category", order: "order" },
+    select: { title: "title", media: "image", subtitle: "category", order: "order", status: "status" },
     prepare(selection) {
-      const { title, media, subtitle, order } = selection
-      return { title, subtitle: `${subtitle || "Uncategorized"} | Order: ${order}`, media }
+      const { title, media, subtitle, order, status } = selection
+      return {
+        title,
+        subtitle: `${subtitle || "Uncategorized"} • ${status || "No status"} • Order: ${order}`,
+        media,
+      }
     },
   },
 })
