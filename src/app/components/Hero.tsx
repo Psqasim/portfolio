@@ -26,7 +26,7 @@ export default function Hero() {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const data = await client.fetch<Profile>(`*[_type == "profile"][0]{shortBio, email, github, linkedin}`)
+        const data = await client.fetch<Profile>(`*[_type == "profil"][0]{shortBio, email, github, linkedin}`)
         setProfile(data)
       } catch {
         setProfile(null)
