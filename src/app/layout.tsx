@@ -3,7 +3,12 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono, Inter } from "next/font/google"
 // @ts-ignore: CSS side-effect import has no type declarations
 import "./globals.css"
-import { RootLayoutClient } from "./RootLayoutClient"
+import { ThemeProvider } from "./theme-provider"
+import { LoaderWrapper } from "./components/LoaderWrappper"
+
+
+
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,7 +25,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Muhammad Qasim — Frontend Developer",
   description:
-    "I'm Muhammad Qasim, a Frontend Developer and Python enthusiast exploring Agentic AI, the OpenAI SDK, Prompt & Context Engineering, and Web3. I craft custom websites, e-commerce platforms, and AI-driven solutions with Next.js, Tailwind CSS, Sanity, Stripe, and Streamlit.",
+    "I’m Muhammad Qasim, a Frontend Developer and Python enthusiast exploring Agentic AI, the OpenAI SDK, Prompt & Context Engineering, and Web3. I craft custom websites, e-commerce platforms, and AI-driven solutions with Next.js, Tailwind CSS, Sanity, Stripe, and Streamlit.",
   metadataBase: new URL("https://psqasim-portfolio.vercel.app"),
   alternates: {
     canonical: "https://psqasim-portfolio.vercel.app",
@@ -30,7 +35,7 @@ export const metadata: Metadata = {
     description:
       "Portfolio of Muhammad Qasim. Building intelligent, scalable, future-ready web solutions using Next.js, Tailwind CSS, Sanity, Stripe, Streamlit, and more.",
     url: "https://psqasim-portfolio.vercel.app",
-    siteName: "Qasim's Portfolio",
+    siteName: "Qasim’s Portfolio",
     images: [
       {
         url: "/og-image.png",
@@ -68,14 +73,28 @@ export const metadata: Metadata = {
     "Streamlit",
     "Karachi",
     "Pakistan",
-    "Portfolio",
-  ],
+    "Portfolio",],
 }
+
+
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <RootLayoutClient inter={inter} geistSans={geistSans} geistMono={geistMono}>
-      {children}
-    </RootLayoutClient>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className} ${geistSans.variable} ${geistMono.variable}`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <LoaderWrapper>
+            {children}
+
+          </LoaderWrapper>
+          
+        </ThemeProvider>
+      </body>
+    </html>
   )
 }
