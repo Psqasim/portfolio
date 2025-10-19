@@ -18,7 +18,10 @@ export function RootLayoutClient({ children, inter, geistSans, geistMono }: Root
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} ${geistSans.variable} ${geistMono.variable}`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange>
           <LoaderWrapper>
             <AnimatePresence mode="wait">{children}</AnimatePresence>
           </LoaderWrapper>
