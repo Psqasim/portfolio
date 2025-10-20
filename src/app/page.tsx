@@ -10,6 +10,7 @@ import { Footer } from "./components/Footer";
 import { AboutMe } from "./components/About";
 import Navbar from "./components/Navbar";
 import Projects from "./components/Project";
+// import { Experience } from "./components/exp";
 
 
 
@@ -23,6 +24,7 @@ export default function Page (){
     <Hero/>
     <AboutMe/>
     <Skills/>
+    {/* <Experience/> */}
     <Projects/>
     
     <Contact/>

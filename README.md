@@ -1,93 +1,78 @@
-# Personal Portfolio Website
+# Muhammad Qasim's Portfolio
 
-## Overview
-This repository contains the source code for my personal portfolio website, deployed at [psqasim-portfolio.vercel.app](https://psqasim-portfolio.vercel.app/). The portfolio showcases my professional background, skills, projects, and provides ways to connect with me.
+Welcome to my personal portfolio website! This project showcases my skills, projects, and experience as a Frontend Developer and Python enthusiast. Built with modern web technologies, it features a dynamic and interactive user experience.
 
 ## Features
-- **Responsive Design**: Optimized for all device sizes (mobile, tablet, desktop)
-- **Modern UI/UX**: Clean and professional interface with smooth animations
-- **Project Gallery**: Showcase of my recent development work with descriptions
-- **Skills Section**: Visual representation of my technical competencies
-- **Contact Form**: Direct way for potential clients or employers to reach out
-- **Resume/CV**: Downloadable resume for recruiters and hiring managers
+
+- **Dynamic Content powered by Sanity.io**: All major sections, including my profile, skills, projects, and contact messages, are managed through Sanity.io, a headless CMS. This allows for easy content updates without touching the codebase.
+- **Responsive Design**: The website is fully responsive, ensuring a seamless experience across desktops, tablets, and mobile devices.
+- **Interactive UI/UX**: Leveraging `Framer Motion` for smooth animations and transitions, providing an engaging user interface.
+- **Theme Toggle**: Users can switch between Light, Dark, and System themes for a personalized browsing experience.
+- **Project Showcase**: A dedicated section to display my portfolio projects, complete with filtering, search functionality, and detailed modal views for each project.
+- **Skills Section**: Highlights my technical proficiencies with categorized skills, proficiency levels, and interactive cards.
+- **Contact Form**: A functional contact form that allows visitors to send messages directly to me, with data securely stored in Sanity.io.
+- **Preloader**: A custom, full-screen animated preloader with glitch effects, particles, and a progress bar, creating a unique and engaging entry point to the site.
 
 ## Technologies Used
-- **Frontend**: React.js, Next.js
-- **Styling**: Tailwind CSS
-- **Deployment**: Vercel
-- **Forms**: Form handling with serverless functions
-- **Animations**: Framer Motion
-- **Icons**: React Icons / Font Awesome
+
+- **Next.js**: React framework for production-grade applications.
+- **TypeScript**: Strongly typed JavaScript for enhanced code quality and maintainability.
+- **Tailwind CSS**: A utility-first CSS framework for rapid and consistent styling.
+- **Sanity.io**: Headless CMS for flexible content management.
+- **Framer Motion**: A production-ready motion library for React to power animations.
+- **Lucide-React & React Icons**: A comprehensive set of customizable SVG icons.
+- **Next-Themes**: For managing and persisting theme preferences (Light/Dark/System).
+
+## Animations & Interactive Elements
+
+This portfolio is designed with a strong emphasis on visual appeal and interactivity:
+
+- **Dynamic Preloader**: A captivating initial loading screen featuring glitch text effects, particle animations, and a progress bar, setting an engaging tone.
+- **Smooth Section Transitions**: Sections like "Hero," "About," "Contact," and "Projects" gracefully animate into view using `Framer Motion`'s `whileInView` and `initial` properties, creating a fluid scrolling experience.
+- **Interactive Cards**: Project and Skill cards respond to user interaction with subtle hover effects, including scaling, shadow changes, and border highlights, adding a layer of polish.
+- **Animated Navigation**: The Navbar provides smooth scrolling to sections, a dynamic theme toggle, and a mobile menu that slides in with a custom CSS animation.
+- **Social Link Interactions**: Social media icons in the footer feature `Framer Motion`'s `whileHover` effects, providing visual feedback on interaction.
+- **Hero Section Dynamics**: The hero section includes animated text elements, such as a pulsing effect on the name, drawing attention to key information.
 
 ## Getting Started
 
-### Prerequisites
-- Node.js (v14.0.0 or later)
-- npm or yarn
+To run this project locally, follow these steps:
 
-### Installation
-1. Clone this repository
-```bash
-git clone https://github.com/yourusername/portfolio-website.git
-cd portfolio-website
-```
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/Psqasim/your-portfolio-repo.git
+    cd your-portfolio-repo
+    ```
 
-2. Install dependencies
-```bash
-npm install
-# or
-yarn install
-```
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
 
-3. Start the development server
-```bash
-npm run dev
-# or
-yarn dev
-```
+3.  **Set up Sanity.io**: 
+    - Create a Sanity project at [sanity.io/manage](https://www.sanity.io/manage).
+    - Configure your `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, and `SANITY_API_TOKEN` in a `.env.local` file.
+    - Run `npm run dev` to start the Sanity Studio and import your schemas.
 
-4. Open [http://localhost:3000](http://localhost:3000) to view the site in your browser
+4.  **Run the development server**:
+    ```bash
+    npm run dev
+    # or
+    yarn dev
+    ```
+
+    Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Deployment
-This portfolio is deployed using [Vercel](https://vercel.com/). The production site automatically updates when changes are pushed to the main branch.
 
-### Manual Deployment
-```bash
-npm run build
-npm run export
-# Then deploy the out directory to your hosting provider
-```
-
-## Project Structure
-```
-├── components/         # Reusable UI components
-├── pages/              # Next.js pages
-├── public/             # Static assets
-├── styles/             # CSS and styling files
-├── lib/                # Utility functions
-├── data/               # Static data files
-└── ...
-```
-
-## Customization
-To customize this portfolio for your own use:
-
-1. Update personal information in `data/profile.js`
-2. Replace projects in `data/projects.js`
-3. Modify skills and experience in their respective data files
-4. Replace images in the `public/images` directory
-5. Adjust color schemes in the Tailwind configuration
-
-## License
-This project is open source and available under the [MIT License](LICENSE).
+The project is configured for deployment on platforms like Vercel. Ensure your environment variables for Sanity.io are correctly set up in your deployment environment.
 
 ## Contact
-For any inquiries, please reach out through the contact form on the website or connect with me at:
-- Email: [your-email@example.com](mailto:muhammadqasim0326@gmail.com)
-- LinkedIn: [Your LinkedIn](https://www.linkedin.com/in/muhammad-qasim-5bba592b4/)
-- GitHub: [Your GitHub](https://github.com/Psqasim)
 
-## Acknowledgements
-- Next.js team for the amazing framework
-- Vercel for the seamless deployment experience
-- All open source contributors whose libraries made this project possible
+Feel free to reach out to me via the contact form on the website or connect with me on LinkedIn/GitHub.
+
+---
+
+© {new Date().getFullYear()} Muhammad Qasim. All rights reserved.

@@ -56,6 +56,8 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: "/qas.jpg",
+    shortcut: "/qas.jpg",
+    apple: "/qas.jpg",
   },
   keywords: [
     "Muhammad Qasim",
