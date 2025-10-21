@@ -300,6 +300,7 @@ export function Footer() {
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
         >
+          {/* Copyright Notice */}
           © {new Date().getFullYear()} Muhammad Qasim. All rights reserved.
         </motion.p>
       </div>
