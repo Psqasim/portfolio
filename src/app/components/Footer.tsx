@@ -128,33 +128,33 @@ const WaveDivider = () => (
 export function AnimeFooter() {
   const navigationLinks = [
     { name: "Home", path: "#home" },
-    { name: "Works", path: "#works" },
+    { name: "Projects", path: "#projects" },
     { name: "About", path: "#about" },
-    { name: "Blog", path: "#blog" },
+    { name: "Skills", path: "#skills" },
     { name: "Contact", path: "#contact" },
   ]
 
   const socialConnections = [
     {
-      href: "https://github.com",
+      href: "https://github.com/Psqasim",
       Icon: Github,
       label: "GitHub",
       bgColor: "bg-gradient-to-br from-gray-600 to-gray-800",
     },
     {
-      href: "https://linkedin.com",
+      href: "https://www.linkedin.com/in/muhammad-qasim-5bba592b4",
       Icon: Linkedin,
       label: "LinkedIn",
       bgColor: "bg-gradient-to-br from-blue-500 to-blue-700",
     },
     {
-      href: "mailto:hello@example.com",
+      href: "mailto:muhammadqasim0326@gmail.com",
       Icon: Mail,
       label: "Email",
       bgColor: "bg-gradient-to-br from-red-500 to-pink-600",
     },
     {
-      href: "https://twitter.com",
+      href: "https://x.com/psqasim0",
       Icon: Twitter,
       label: "Twitter",
       bgColor: "bg-gradient-to-br from-blue-400 to-blue-600",
