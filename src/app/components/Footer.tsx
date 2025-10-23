@@ -1,13 +1,13 @@
 "use client"
 
 import type React from "react"
-import { Github, Linkedin, Mail, Heart, Code, Coffee, Sparkles, Circle } from "lucide-react"
+import { Github, Linkedin, Mail, Code, Twitter, Sparkles, Circle } from "lucide-react"
 import { motion } from "framer-motion"
 
 // Floating sakura petals animation
 const SakuraPetal = ({ delay, duration }: { delay: number; duration: number }) => (
   <motion.div
-    className="absolute w-2 h-2 bg-gradient-to-br from-pink-300 to-rose-400 dark:from-pink-400 dark:to-rose-500 rounded-full opacity-60"
+    className="absolute w-2 h-2 bg-gradient-to-br from-pink-300 to-rose-400 rounded-full opacity-60"
     animate={{
       y: [0, 100, 200],
       x: [0, Math.sin(delay * 2) * 60, Math.cos(delay) * 40],
@@ -34,9 +34,8 @@ const KanjiCircle = () => (
     animate={{ rotate: 360 }}
     transition={{ duration: 30, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
   >
-    {/* Outer ring with kanji aesthetic */}
     <motion.div
-      className="absolute inset-0 rounded-full border-2 border-rose-500 dark:border-rose-400"
+      className="absolute inset-0 rounded-full border-2 border-rose-500"
       animate={{
         scale: [1, 1.15, 1],
         opacity: [0.5, 1, 0.5],
@@ -44,15 +43,13 @@ const KanjiCircle = () => (
       transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY }}
     />
 
-    {/* Inner rotating ring */}
     <motion.div
-      className="absolute inset-3 rounded-full border border-dashed border-pink-500 dark:border-pink-400"
+      className="absolute inset-3 rounded-full border border-dashed border-pink-500"
       animate={{ rotate: -360 }}
       transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
     />
 
-    {/* Center kanji symbol */}
-    <span className="text-2xl font-bold text-rose-600 dark:text-rose-400">夢</span>
+    <span className="text-2xl font-bold text-rose-600">夢</span>
   </motion.div>
 )
 
@@ -84,7 +81,6 @@ const SocialIcon = ({ href, Icon, label, bgColor, index }: SocialIconProps) => (
     aria-label={label}
     title={label}
   >
-    {/* Shine effect on hover */}
     <motion.div
       className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
       initial={{ x: "-100%" }}
@@ -111,7 +107,7 @@ const WaveDivider = () => (
     >
       <motion.path
         d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
-        className="fill-white dark:fill-gray-900"
+        className="fill-white"
         animate={{
           d: [
             "M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z",
@@ -158,20 +154,20 @@ export function AnimeFooter() {
       bgColor: "bg-gradient-to-br from-red-500 to-pink-600",
     },
     {
-      href: "#",
-      Icon: Coffee,
-      label: "Buy Me Coffee",
-      bgColor: "bg-gradient-to-br from-amber-500 to-orange-600",
+      href: "https://twitter.com",
+      Icon: Twitter,
+      label: "Twitter",
+      bgColor: "bg-gradient-to-br from-blue-400 to-blue-600",
     },
   ]
 
   return (
-    <footer className="relative min-h-screen md:min-h-[70vh] overflow-hidden bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 dark:from-gray-950 dark:via-purple-950/30 dark:to-gray-950 transition-colors duration-500">
+    <footer className="footer-container relative min-h-auto overflow-hidden bg-white transition-colors duration-500">
       {/* Wave divider at top */}
       <WaveDivider />
 
       {/* Animated sakura petals */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-40 dark:opacity-70">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-40">
         {[...Array(15)].map((_, i) => (
           <SakuraPetal key={i} delay={i * 0.6} duration={5 + i * 0.3} />
         ))}
@@ -179,7 +175,7 @@ export function AnimeFooter() {
 
       {/* Glowing orbs background */}
       <motion.div
-        className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-rose-300/20 dark:from-rose-600/15 to-transparent rounded-full blur-3xl"
+        className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-rose-300/20 to-transparent rounded-full blur-3xl"
         animate={{
           y: [0, 50, 0],
           x: [0, 30, 0],
@@ -189,7 +185,7 @@ export function AnimeFooter() {
       />
 
       <motion.div
-        className="absolute bottom-20 left-10 w-96 h-96 bg-gradient-to-tr from-purple-300/20 dark:from-purple-600/15 to-transparent rounded-full blur-3xl"
+        className="absolute bottom-20 left-10 w-96 h-96 bg-gradient-to-tr from-purple-300/20 to-transparent rounded-full blur-3xl"
         animate={{
           y: [0, -50, 0],
           x: [0, -30, 0],
@@ -199,8 +195,8 @@ export function AnimeFooter() {
       />
 
       {/* Main content container */}
-      <div className="container mx-auto px-6 py-16 md:py-20 relative z-10 flex flex-col min-h-[inherit]">
-        <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
+      <div className="container mx-auto px-6 py-16 md:py-20 relative z-10 flex flex-col">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
           {/* Left Column - Brand & Description */}
           <motion.div
             className="lg:col-span-2 space-y-8"
@@ -214,11 +210,23 @@ export function AnimeFooter() {
               <div className="flex items-center gap-5">
                 <KanjiCircle />
                 <div>
-                  <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 dark:from-rose-400 dark:via-pink-400 dark:to-purple-400 bg-clip-text text-transparent">
-                    Your Brand
-                  </h2>
+                  <h1>
+                    <motion.p
+                    className="text-4xl md:text-5xl font-bold  text-pink-600 mt-1 tracking-wide"
+                    animate={{
+                      opacity: [0.7, 1, 0.7],
+                    }}
+                    transition={{
+                      duration: 2.5,
+                      repeat: Number.POSITIVE_INFINITY,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    MUHAMMAD QASIM
+                  </motion.p>
+                  </h1>
                   <motion.p
-                    className="text-base md:text-lg font-mono font-semibold text-pink-600 dark:text-pink-400 mt-1 tracking-wide"
+                    className="text-base md:text-lg font-mono font-semibold text-pink-600 mt-1 tracking-wide"
                     animate={{
                       opacity: [0.7, 1, 0.7],
                     }}
@@ -233,7 +241,7 @@ export function AnimeFooter() {
                 </div>
               </div>
 
-              <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed max-w-2xl">
+              <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-2xl">
                 Crafting digital experiences with passion and precision. Where creativity meets innovation in every
                 pixel.
               </p>
@@ -247,18 +255,18 @@ export function AnimeFooter() {
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
-              <h3 className="text-sm font-bold text-rose-600 dark:text-rose-400 tracking-wider flex items-center gap-2 uppercase">
+              <h3 className="text-sm font-bold text-rose-600 tracking-wider flex items-center gap-2 uppercase">
                 <Circle className="w-3 h-3 fill-current" />
                 Navigation
               </h3>
 
-              <div className="bg-white/70 dark:bg-gray-900/40 backdrop-blur-xl rounded-3xl p-6 md:p-8 border-2 border-rose-200 dark:border-rose-900/40 shadow-xl">
+              <div className="glass-card rounded-3xl p-6 md:p-8 border-2 border-rose-200 shadow-xl">
                 <nav className="grid grid-cols-2 md:grid-cols-5 gap-4">
                   {navigationLinks.map((link, index) => (
                     <motion.a
                       key={link.name}
                       href={link.path}
-                      className="flex items-center gap-2 text-gray-800 dark:text-gray-200 hover:text-rose-600 dark:hover:text-rose-400 transition-colors duration-300 font-semibold text-sm md:text-base py-2 px-4 rounded-xl hover:bg-rose-100 dark:hover:bg-rose-500/10 group"
+                      className="flex items-center gap-2 text-gray-800 hover:text-rose-600 transition-colors duration-300 font-semibold text-sm md:text-base py-2 px-4 rounded-xl hover:bg-rose-100 group"
                       whileHover={{ x: 6, scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
                       initial={{ opacity: 0, x: -15 }}
@@ -266,9 +274,7 @@ export function AnimeFooter() {
                       viewport={{ once: true }}
                       transition={{ delay: index * 0.06 }}
                     >
-                      <span className="text-rose-600 dark:text-rose-400 text-lg group-hover:scale-125 transition-transform">
-                        ›
-                      </span>
+                      <span className="text-rose-600 text-lg group-hover:scale-125 transition-transform">›</span>
                       {link.name}
                     </motion.a>
                   ))}
@@ -278,14 +284,14 @@ export function AnimeFooter() {
 
             {/* Decorative quote with anime styling */}
             <motion.div
-              className="bg-gradient-to-r from-rose-100/80 via-pink-100/80 to-purple-100/80 dark:from-rose-950/40 dark:via-pink-950/40 dark:to-purple-950/40 rounded-2xl p-6 border-l-4 border-rose-500 dark:border-rose-400"
+              className="quote-card bg-gradient-to-r from-rose-100 via-pink-100 to-purple-100 rounded-2xl p-6 border-l-4 border-rose-500"
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
             >
-              <p className="text-gray-800 dark:text-gray-200 text-sm md:text-base italic font-medium flex items-start gap-3">
-                <Sparkles className="w-5 h-5 text-rose-500 dark:text-rose-400 flex-shrink-0 mt-0.5" />
+              <p className="text-gray-800 text-sm md:text-base italic font-medium flex items-start gap-3">
+                <Sparkles className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
                 <span>"The future belongs to those who believe in the beauty of their dreams."</span>
               </p>
             </motion.div>
@@ -300,9 +306,9 @@ export function AnimeFooter() {
             transition={{ delay: 0.4 }}
           >
             {/* Connect card */}
-            <div className="bg-white/70 dark:bg-gray-900/40 backdrop-blur-xl rounded-3xl p-7 border-2 border-rose-200 dark:border-rose-900/40 shadow-xl space-y-6">
+            <div className="glass-card  backdrop-blur-xl rounded-3xl p-7 border-2 border-rose-200 shadow-xl space-y-6">
               <div>
-                <h3 className="text-xl font-bold text-rose-600 dark:text-rose-400 mb-2 flex items-center gap-2">
+                <h3 className="text-xl font-bold text-rose-600 mb-2 flex items-center gap-2">
                   <motion.span
                     animate={{ rotate: [0, 15, -15, 0] }}
                     transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
@@ -311,7 +317,7 @@ export function AnimeFooter() {
                   </motion.span>
                   Let's Connect
                 </h3>
-                <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">
+                <p className="text-xs text-gray-600 font-medium">
                   Reach out for collaborations or just a friendly hello
                 </p>
               </div>
@@ -324,30 +330,16 @@ export function AnimeFooter() {
               </div>
             </div>
 
-            {/* Status badge */}
-            {/* <motion.div
-              className="bg-gradient-to-br from-rose-200/70 to-purple-200/70 dark:from-rose-900/40 dark:to-purple-900/40 rounded-2xl p-5 border-2 border-rose-300 dark:border-rose-900/50 text-center"
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5 }}
-            >
-              <p className="text-sm text-gray-800 dark:text-gray-200 font-semibold flex items-center justify-center gap-2">
-                <Heart className="w-4 h-4 text-rose-600 dark:text-rose-400 animate-pulse" />
-                Made with love and passion
-              </p>
-            </motion.div> */}
-
             {/* Code stats */}
             <motion.div
-              className="bg-gradient-to-br from-purple-200/70 to-pink-200/70 dark:from-purple-900/40 dark:to-pink-900/40 rounded-2xl p-5 border-2 border-purple-300 dark:border-purple-900/50 text-center"
+              className="stats-card bg-white  rounded-2xl p-5 border-2 border-purple-300 text-center"
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.6 }}
             >
-              <p className="text-sm text-gray-800 dark:text-gray-200 font-semibold flex items-center justify-center gap-2">
-                <Code className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+              <p className="text-sm text-gray-800 font-semibold flex items-center justify-center gap-2">
+                <Code className="w-4 h-4 text-purple-600" />
                 Building the future, one line at a time
               </p>
             </motion.div>
@@ -356,32 +348,21 @@ export function AnimeFooter() {
 
         {/* Copyright section at bottom */}
         <motion.div
-          className="mt-auto pt-12 border-t-2 border-rose-200 dark:border-rose-900/40"
+          className="mt-12 pt-12 border-t-2 border-rose-200"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.7 }}
         >
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-gray-700 dark:text-gray-300 text-center md:text-left">
-              © {new Date().getFullYear()} Your Brand. All rights reserved.
+            <p className="text-sm text-gray-700 text-center md:text-left">
+              © {new Date().getFullYear()} MUAHAMMAD QASIM All rights reserved.
             </p>
-
-            {/* <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
-              <span>Built with</span>
-              <motion.span
-                animate={{ scale: [1, 1.3, 1] }}
-                transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
-                className="text-rose-500 dark:text-rose-400"
-              >
-                ❤️
-              </motion.span>
-              <span>using Next.js & Tailwind</span>
-            </div> */}
           </div>
         </motion.div>
       </div>
     </footer>
   )
 }
+
 export default AnimeFooter
