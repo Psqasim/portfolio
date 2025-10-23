@@ -152,6 +152,7 @@ export function AnimeFooter() {
       Icon: Mail,
       label: "Email",
       bgColor: "bg-gradient-to-br from-red-500 to-pink-600",
+       isEmail: true,
     },
     {
       href: "https://x.com/psqasim0",
